@@ -398,11 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-# Ignore AssemblyInfoinputs.cache (temporary build file)
-AssemblyInfoinputs.cache
-
-AssemblyInfo.cs
-
-# Ignore build output directories
-obj/
+# Ignore AssemblyInfo.cs and AssemblyInfoInputs.cache files globally
+**/AssemblyInfo.cs
+**/AssemblyInfoInputs.cache
