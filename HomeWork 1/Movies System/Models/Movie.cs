@@ -1,4 +1,4 @@
-﻿namespace Movies_System.BL
+﻿namespace Movies_System.Models
 {
     public class Movie
     {
