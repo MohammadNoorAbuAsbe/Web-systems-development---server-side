@@ -9,6 +9,7 @@ namespace Movies_System.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
+        #region GET Methods
         // GET: api/<MoviesController>
         [HttpGet]
         public IEnumerable<Movie> Get()
@@ -29,13 +30,15 @@ namespace Movies_System.Controllers
         {
             return Movie.GetByReleaseDate(startDate, endDate);
         }
+        #endregion
 
-
+        #region POST Methods
         // POST api/<MoviesController>
         [HttpPost]
         public bool Post([FromBody] Movie movie)
         {
             return Movie.Insert(movie);
         }
+        #endregion
     }
 }

@@ -65,7 +65,7 @@
         public int NumVotes { get => numVotes; set => numVotes = value; }
         #endregion
 
-        #region POST methods
+        #region POST Methods
         public static bool Insert(Movie movie)
         {
             bool result = false;
@@ -78,7 +78,7 @@
         }
         #endregion
 
-        #region GET methods 
+        #region GET Methods 
         public static List<Movie> Read()
         {
             return moviesList;
