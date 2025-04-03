@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+
+    <script src="scripts/ajaxCalls.js"></script>
+
+    <script>
+
+        $(document).ready(init);
+
+
+        function init() {
+            $("#btn1").click(sendToServer);
+
+            port = "7274";
+
+            url = `https://localhost:${port}/api/Players`;
+
+            ajaxCall("GET", url, "", readSCB, readECB);
+
+
+        }
+
+        function readSCB(res) {
+            console.log(res);
+        }
+
+        function readECB(err) {
+            console.log(err);
+        }
+
+
+        function sendToServer() {
+
+            // collect the values from the controls
+            const player = {
+                Name: $("#nameTB").val(),
+                Age: $("#ageTB").val(),
+                WinRate: $("#winTB").val()
+
+            }
+
+            console.log(player);
+
+
+
+            ajaxCall("POST", url, JSON.stringify(player), sendSCB, sendECB);
+
+            // send it to the server
+
+
+        }
+
+        function sendSCB(res) {
+            console.log(res);
+        }
+
+        function sendECB(err) {
+            console.log(err);
+        }
+
+
+    </script>
+
+
+</head>
+<body>
+
+    <table>
+        <tr>
+            <td>name</td>
+            <td><input type="text" id="nameTB" /></td>
+        </tr>
+        <tr>
+            <td>age</td>
+            <td><input type="number" id="ageTB" /></td>
+        </tr>
+        <tr>
+            <td>Win Rate</td>
+            <td><input type="number" id="winTB" /></td>
+        </tr>
+        <tr>
+            <td>
+                <button id="btn1">Send to server</button>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
