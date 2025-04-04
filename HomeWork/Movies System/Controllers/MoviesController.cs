@@ -39,6 +39,21 @@ namespace Movies_System.Controllers
         {
             return Movie.Insert(movie);
         }
+
+        [HttpPost("addToCart")]
+        public bool AddToCart([FromBody] Movie movie)
+        {
+            return Movie.Insert(movie);
+        }
+        #endregion
+
+        #region Delete Methods
+        // DELETE api/<MoviesController>/5
+        [HttpDelete("{id}")]
+        public bool Delete(int id)
+        {
+            return Movie.RemoveFromList(id);
+        }
         #endregion
     }
 }

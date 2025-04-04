@@ -94,5 +94,19 @@
             return moviesList.Where(m => m.ReleaseDate >= startDate && m.ReleaseDate <= endDate).ToList();
         }
         #endregion
+
+        #region DELETE Methods
+        public static bool RemoveFromList(int id)
+        {
+            bool result = false;
+            Movie movieToRemove = moviesList.FirstOrDefault(m => m.Id == id);
+            if (movieToRemove != null)
+            {
+                moviesList.Remove(movieToRemove);
+                result = true;
+            }
+            return result;
+        }
+        #endregion
     }
 }
