@@ -5,7 +5,7 @@
         #region Fields
         static List<Movie> moviesList = new List<Movie>();
 
-        int id;
+        string id;
         string url;
         string primaryTitle;
         string description;
@@ -24,7 +24,7 @@
         #endregion
 
         #region Constructors
-        public Movie(int id, string url, string primaryTitle, string description, string primaryImage, int year, DateTime releaseDate, string language, double budget, double grossWorldwide, string genres, bool isAdult, int runtimeMinutes, float averageRating, int numVotes)
+        public Movie(string id, string url, string primaryTitle, string description, string primaryImage, int year, DateTime releaseDate, string language, double budget, double grossWorldwide, string genres, bool isAdult, int runtimeMinutes, float averageRating, int numVotes)
         {
             Id = id;
             Url = url;
@@ -48,7 +48,7 @@
         #endregion
 
         #region Properties
-        public int Id { get => id; set => id = value; }
+        public string Id { get => id; set => id = value; }
         public string Url { get => url; set => url = value; }
         public string PrimaryTitle { get => primaryTitle; set => primaryTitle = value; }
         public string Description { get => description; set => description = value; }
@@ -96,7 +96,7 @@
         #endregion
 
         #region DELETE Methods
-        public static bool DeleteById(int id)
+        public static bool DeleteById(string id)
         {
             var movieToRemove = moviesList.Where(m => m.id == id).FirstOrDefault();
             if (movieToRemove != null)

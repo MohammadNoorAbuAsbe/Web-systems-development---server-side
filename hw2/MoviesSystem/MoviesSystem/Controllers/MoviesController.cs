@@ -44,7 +44,7 @@ namespace MoviesSystem.Controllers
 
         #region DELETE Methods
         [HttpDelete]
-        public bool DeleteMovie(int id)
+        public bool DeleteMovie(string id)
         {
             return Movie.DeleteById(id);
         }

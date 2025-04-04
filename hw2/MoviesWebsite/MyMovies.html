@@ -7,10 +7,23 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+    <script src="scripts/ajaxCalls.js"></script>
     <script>
-     
+        $(document).ready(readAllMovies);
 
-    
+        function readAllMovies() {
+            const port = 7284
+            const url = `https://localhost:${port}/api/Movies`;
+
+            ajaxCall("GET", url, "", readSCB, readECS)
+        }
+        function readSCB(res) {
+            console.log(res);
+        }
+        function readECS(err) {
+            console.log(err);
+        }
+
     </script>
 </head>
 <body>
