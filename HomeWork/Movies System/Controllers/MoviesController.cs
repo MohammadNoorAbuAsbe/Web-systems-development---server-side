@@ -11,7 +11,7 @@ namespace Movies_System.Controllers
     {
         #region GET Methods
         // GET: api/<MoviesController>
-        [HttpGet]
+        [HttpGet("cart")]
         public IEnumerable<Movie> Get()
         {
             return Movie.Read();
@@ -34,14 +34,8 @@ namespace Movies_System.Controllers
 
         #region POST Methods
         // POST api/<MoviesController>
-        [HttpPost]
-        public bool Post([FromBody] Movie movie)
-        {
-            return Movie.Insert(movie);
-        }
-
         [HttpPost("addToCart")]
-        public bool AddToCart([FromBody] Movie movie)
+        public bool Post([FromBody] Movie movie)
         {
             return Movie.Insert(movie);
         }
