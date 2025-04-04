@@ -3,8 +3,224 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main Content Styling */
+        .container {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #loadBtn {
+            background: linear-gradient(145deg, #3a5ef7, #6a7cff);
+            border: none;
+            color: white;
+            padding: 15px 50px;
+            font-size: 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2), -5px -5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+            #loadBtn:hover {
+                background: linear-gradient(145deg, #6a7cff, #3a5ef7);
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2), 0px 0px 20px rgba(255, 255, 255, 0.2);
+                transform: scale(1.05);
+            }
+
+        /* Movie Cards Styling (In-line Layout) */
+        .moviesContainer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center; /* Centering the cards */
+            gap: 20px; /* Space between cards */
+            flex-wrap: wrap; /* Allows wrapping of cards on smaller screens */
+        }
+
+        .movie-card {
+            background-color: #fff;
+            padding: 20px;
+            width: 250px; /* Fixed width */
+            height: 400px; /* Fixed height */
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            display: inline-block;
+        }
+
+            .movie-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .movie-card img {
+                width: 100%;
+                height: 180px; /* Fixed height for the image */
+                object-fit: cover; /* Ensures the image covers the area */
+                border-radius: 10px;
+                transition: transform 0.3s ease;
+            }
+
+                .movie-card img:hover {
+                    transform: scale(1.05);
+                }
+
+            .movie-card h3 {
+                font-size: 18px;
+                color: #333;
+                margin-top: 15px;
+                height: 50px; /* Fixed height for the title */
+                overflow: hidden; /* Hide any overflowed content */
+            }
+
+            .movie-card p {
+                font-size: 14px;
+                color: #777;
+                margin: 10px 0;
+                flex-grow: 1; /* Takes up remaining space */
+                overflow: hidden;
+            }
+
+            .movie-card button {
+                background-color: #3a5ef7;
+                border: none;
+                color: white;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 25px;
+                cursor: pointer;
+                transition: 0.3s ease;
+            }
+
+                .movie-card button:hover {
+                    background-color: #6a7cff;
+                    transform: scale(1.05);
+                }
+
+        /* Title Styling */
+        #title {
+            font-size: 2em;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+            header nav {
+                display: inline-block;
+            }
+
+                header nav a {
+                    color: white;
+                    text-decoration: none;
+                    padding: 10px 15px;
+                    margin: 0 10px;
+                    font-size: 18px;
+                }
+
+                    header nav a:hover {
+                        background-color: #575757;
+                        border-radius: 5px;
+                    }
+    </style>
+
+    <script src="scripts/movies-db.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(renderMovies);
+
+
+        function renderMovies() {
+            console.log(movies);
+            const cart = [];
+            const moviesContainer = $('#moviesContainer');
+            const title = $('#title');
+
+
+            $('#loadBtn').click(function () {
+                $(this).hide();
+                title.text("All Movies");
+                moviesContainer.empty();
+                // Render Movies
+                movies.forEach(function (movie) {
+                    const movieCard = `
+                                        <div class="movie-card">
+                                            <img src="${movie.primaryImage}" alt="${movie.primaryTitle}">
+                                            <h3>${movie.primaryTitle} (${movie.startYear})</h3>
+                                            <p>${movie.description}</p>
+                                            <button class="btn" onclick="addToCart(${movie.id})">Add to Cart</button>
+                                        </div>
+                                        `;
+                    console.log(movieCard);
+                    moviesContainer.append(movieCard);
+                });
+            });
+        }
+        function addToCart(movieId) {
+            const movie = movies.find(movie => movie.id === movieId);
+            if (!cart.includes(movie)) {
+                cart.push(movie);
+                sendToServer(movie);
+                alert(`${movie.primaryTitle} added to cart!`);
+            } else {
+                alert(`${movie.primaryTitle} is already in the cart.`);
+            }
+        }
+        const port = 7246
+        const url1 = `https://localhost:${port}/api/Movies`;
+        function sendToServer(movie) {
+            
+            $.ajax({
+                url: url1, 
+                method: 'POST',
+                data: JSON.stringify(movie),
+                contentType: 'application/json',
+                success: function (response) {
+                    alert('Cart sent to server!');
+                },
+                error: function (error) {
+                    alert('Error sending cart to server!');
+                }
+            });
+        }
+
+
+    </script>
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="MyMovies.html">My Movies</a>
+        </nav>
+    </header>
+    <div class="container">
+        <button id="loadBtn">Load Movies</button>
+        <h1 id="title"></h1>
+        <div id="moviesContainer"></div>
+    </div>
 
 </body>
 </html>

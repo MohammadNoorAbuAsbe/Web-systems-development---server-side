@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Movies_System.Models;
+using MoviesSystem.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Movies_System.Controllers
+namespace MoviesSystem.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase

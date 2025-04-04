@@ -1,4 +1,4 @@
-﻿namespace Movies_System.Models
+﻿namespace MoviesSystem.Models
 {
     public class Movie
     {
@@ -84,7 +84,7 @@
             return moviesList;
         }
 
-        public static List<Movie> GetByTitle(string title) 
+        public static List<Movie> GetByTitle(string title)
         {
             return moviesList.Where(m => m.PrimaryTitle.Contains(title)).ToList();
         }
@@ -99,12 +99,14 @@
         public static bool DeleteById(int id)
         {
             var movieToRemove = moviesList.Where(m => m.id == id).FirstOrDefault();
-            if (movieToRemove != null) {
+            if (movieToRemove != null)
+            {
                 moviesList.Remove(movieToRemove);
                 return true;
             }
             return false;
         }
         #endregion
+
     }
 }
