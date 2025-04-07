@@ -69,8 +69,9 @@
         public static bool Insert(Movie movie)
         {
             bool result = false;
-            if (!moviesList.Any(m => m.Id == movie.Id || m.PrimaryTitle == movie.PrimaryTitle))
+            if (!moviesList.Any(m => m.PrimaryTitle == movie.PrimaryTitle))
             {
+                movie .Id = moviesList.Count > 0 ? moviesList.Max(m => m.Id) + 1 : 1;
                 moviesList.Add(movie);
                 result = true;
             }

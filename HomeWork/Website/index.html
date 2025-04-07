@@ -2,9 +2,120 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
     <title></title>
+    <link href="styles/style.css" rel="stylesheet" />
+    <script src="dataBase/movies-db.js"></script>
+    <script src="scripts/ajaxCalls.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(renderMovies);
+
+        function renderMovies() {
+            const moviesContainer = $('#moviesContainer');
+            const title = $('#title');
+
+            $('#loadBtn').click(function () {
+                $(this).hide();
+                title.text("All Movies");
+                moviesContainer.empty();
+                movies.forEach(function (movie) {
+                    const movieCard = $('<div>').addClass('movie-card');
+                    const movieImage = $('<img>').attr('src', movie.primaryImage).attr('alt', movie.primaryTitle);
+                    const movieTitle = $('<h3>').text(`${movie.primaryTitle} (${movie.startYear})`);
+                    const movieDescription = $('<p>').text(movie.description);
+                    const movieDetails = $('<div>').addClass('movie-details');
+
+                    const details = [
+                        { label: 'Release Date', value: movie.releaseDate },
+                        { label: 'Language', value: movie.language },
+                        { label: 'Budget', value: movie.budget },
+                        { label: 'Gross Worldwide', value: movie.grossWorldwide },
+                        { label: 'Genres', value: Array.isArray(movie.genres) ? movie.genres.join(",") : movie.genres },
+                        { label: 'Adult', value: movie.isAdult },
+                        { label: 'Runtime', value: `${movie.runtimeMinutes} minutes` },
+                        { label: 'Rating', value: movie.averageRating },
+                        { label: 'Votes', value: movie.numVotes }
+                    ];
+
+                    details.forEach(detail => {
+                        const detailElement = $('<div>').addClass('movie-detail');
+                        const detailLabel = $('<strong>').text(detail.label);
+                        const detailValue = $('<span>').text(detail.value);
+                        detailElement.append(detailLabel, detailValue);
+                        movieDetails.append(detailElement);
+                    });
+
+                    const addButton = $('<button>').addClass('btn').data('id', movie.id).text('Add to Cart');
+
+                    movieCard.append(movieImage, movieTitle, movieDescription, movieDetails, addButton);
+                    moviesContainer.append(movieCard);
+                });
+
+                $('.btn').click(function () {
+                    const movieId = $(this).data('id');
+                    addToCart(movieId);
+                });
+            });
+        }
+
+        function addToCart(movieId) {
+            const movie = movies.find(movie => movie.id === movieId);
+            const movieToSend = {
+                id: 1,
+                url: movie.url,
+                primaryTitle: movie.primaryTitle,
+                description: movie.description,
+                primaryImage: movie.primaryImage,
+                year: movie.startYear,
+                releaseDate: movie.releaseDate,
+                language: movie.language,
+                budget: movie.budget,
+                grossWorldwide: movie.grossWorldwide,
+                genres: Array.isArray(movie.genres) ? movie.genres.join(",") : movie.genres,
+                isAdult: movie.isAdult,
+                runtimeMinutes: movie.runtimeMinutes,
+                averageRating: movie.averageRating,
+                numVotes: movie.numVotes
+            };
+            sendToServer(movieToSend);
+        }
+
+        const port = 7246;
+        const url1 = `https://localhost:${port}/api/Movies/addToCart`;
+
+        function sendToServer(movie) {
+            ajaxCall('POST', url1, JSON.stringify(movie), onSuccess, onError);
+        }
+
+        function onSuccess(response) {
+            if (response) {
+                alert('Movie added to cart!');
+            } else {
+                alert('Movie is already in the cart.');
+            }
+        }
+
+        function onError(error) {
+            alert('Error sending movie to server!');
+        }
+    </script>
 </head>
 <body>
-
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="MyMovies.html">My Movies</a>
+        </nav>
+    </header>
+    <div class="container">
+        <button id="loadBtn">Load Movies</button>
+        <h1 id="title"></h1>
+        <div id="moviesContainer"></div>
+    </div>
 </body>
 </html>

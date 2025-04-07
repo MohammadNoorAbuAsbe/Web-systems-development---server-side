@@ -2,9 +2,209 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <title>My Movies</title>
+    <link href="styles/style.css" rel="stylesheet" />
+    <script src="scripts/ajaxCalls.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .movie-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+            .movie-card img {
+                max-width: 100%;
+                border-radius: 8px;
+            }
+
+            .movie-card h3 {
+                margin: 10px 0;
+                font-size: 1.5em;
+                color: #333;
+            }
+
+            .movie-card p {
+                margin: 5px 0;
+                color: #666;
+            }
+
+            .movie-card .btn {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+                .movie-card .btn:hover {
+                    background-color: #0056b3;
+                }
+
+        .movie-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .movie-detail {
+            flex: 1 1 45%;
+            margin: 5px 0;
+        }
+
+            .movie-detail strong {
+                display: block;
+                color: #333;
+            }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+            .filters input {
+                padding: 10px;
+                font-size: 1em;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+    </style>
+    <script>
+        const port = 7246;
+        const url1 = `https://localhost:${port}/api/Movies/cart`;
+        const urlDelete = `https://localhost:${port}/api/Movies/delete`;
+        const urlFilterByTitle = `https://localhost:${port}/api/Movies/filterByTitle`;
+        const urlFilterByDate = `https://localhost:${port}/api/Movies/filterByDate`;
+
+        $(document).ready(function () {
+            retriveFromServer();
+
+            $('#filterTitleBtn').click(function () {
+                const title = $('#filterTitle').val();
+                filterMoviesByTitle(title);
+            });
+
+            $('#filterDateBtn').click(function () {
+                const date = $('#filterDate').val();
+                filterMoviesByDate(date);
+            });
+        });
+
+        function renderMovies(movies) {
+            const moviesContainer = $('#moviesContainer');
+            moviesContainer.empty();
+            if (movies.length === 0) {
+                alert('No movies found.');
+                return;
+            }
+            movies.forEach(function (movie) {
+                const movieCard = $('<div>').addClass('movie-card');
+                const movieImage = $('<img>').attr('src', movie.primaryImage).attr('alt', movie.primaryTitle);
+                const movieTitle = $('<h3>').text(`${movie.primaryTitle} (${movie.startYear})`);
+                const movieDescription = $('<p>').text(movie.description);
+                const movieDetails = $('<div>').addClass('movie-details');
+
+                const details = [
+                    { label: 'Release Date', value: movie.releaseDate },
+                    { label: 'Language', value: movie.language },
+                    { label: 'Budget', value: movie.budget },
+                    { label: 'Gross Worldwide', value: movie.grossWorldwide },
+                    { label: 'Genres', value: Array.isArray(movie.genres) ? movie.genres.join(",") : movie.genres },
+                    { label: 'Adult', value: movie.isAdult },
+                    { label: 'Runtime', value: `${movie.runtimeMinutes} minutes` },
+                    { label: 'Rating', value: movie.averageRating },
+                    { label: 'Votes', value: movie.numVotes }
+                ];
+
+                details.forEach(detail => {
+                    const detailElement = $('<div>').addClass('movie-detail');
+                    const detailLabel = $('<strong>').text(detail.label);
+                    const detailValue = $('<span>').text(detail.value);
+                    detailElement.append(detailLabel, detailValue);
+                    movieDetails.append(detailElement);
+                });
+
+                const deleteButton = $('<button>').addClass('btn').data('id', movie.id).text('Delete').click(function () {
+                    deleteMovie(movie.id);
+                });
+
+                movieCard.append(movieImage, movieTitle, movieDescription, movieDetails, deleteButton);
+                moviesContainer.append(movieCard);
+            });
+        }
+
+        function retriveFromServer() {
+            ajaxCall('GET', url1, "", renderMovies, onError);
+        }
+
+        function deleteMovie(movieId) {
+            ajaxCall('DELETE', `${urlDelete}/${movieId}`, "", function () {
+                alert('Movie deleted successfully!');
+                retriveFromServer();
+            }, onError);
+        }
+
+        function filterMoviesByTitle(title) {
+            ajaxCall('GET', `${urlFilterByTitle}?title=${title}`, "", renderMovies, onError);
+        }
+
+        function filterMoviesByDate(date) {
+            ajaxCall('GET', `${urlFilterByDate}?date=${date}`, "", renderMovies, onError);
+        }
+
+        function onError(error) {
+            alert('Error processing request!');
+        }
+    </script>
 </head>
 <body>
-
+    <header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="MyMovies.html">My Movies</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="filters">
+            <input type="text" id="filterTitle" placeholder="Filter by Title" />
+            <button id="filterTitleBtn">Filter</button>
+            <input type="date" id="filterDate" />
+            <button id="filterDateBtn">Filter</button>
+        </div>
+        <h1 id="title">My Movies</h1>
+        <div id="moviesContainer"></div>
+    </div>
 </body>
 </html>
+
+
+
+
