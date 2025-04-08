@@ -18,14 +18,14 @@ namespace Movies_System.Controllers
         }
 
 
-        [HttpGet("GetByTitle")]
+        [HttpGet("getByTitle")]
         public IEnumerable<Movie> GetByTitle(string title)
         {
             return Movie.GetByTitle(title);
         }
 
 
-        [HttpGet("from/{startDate}/until/{endDate}")]
+        [HttpGet("filterByDate")]
         public IEnumerable<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
             return Movie.GetByReleaseDate(startDate, endDate);

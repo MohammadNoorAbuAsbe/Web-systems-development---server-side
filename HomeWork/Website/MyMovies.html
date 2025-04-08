@@ -67,22 +67,10 @@
                     background-color: #0056b3;
                 }
 
-        .movie-details {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .movie-detail {
-            flex: 1 1 45%;
-            margin: 5px 0;
-        }
-
-            .movie-detail strong {
-                display: block;
-                color: #333;
-            }
+                .movie-card .btn:disabled {
+                    background-color: #ccc;
+                    cursor: not-allowed;
+                }
 
         .filters {
             display: flex;
@@ -96,16 +84,87 @@
                 border: 1px solid #ccc;
                 border-radius: 5px;
             }
+
+        .active-filter {
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+            .active-filter span {
+                font-size: 1em;
+                color: #333;
+            }
+
+            .active-filter button {
+                background-color: transparent;
+                border: none;
+                font-size: 1.2em;
+                color: #333;
+                cursor: pointer;
+            }
+
+                .active-filter button:hover {
+                    color: #ff0000;
+                }
+
+        .notification {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            display: none;
+        }
+
+            .notification.success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+
+            .notification.error {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            .notification.info {
+                background-color: #d1ecf1;
+                color: #0c5460;
+                border: 1px solid #bee5eb;
+            }
     </style>
     <script>
         const port = 7246;
         const url1 = `https://localhost:${port}/api/Movies/cart`;
-        const urlDelete = `https://localhost:${port}/api/Movies/delete`;
-        const urlFilterByTitle = `https://localhost:${port}/api/Movies/filterByTitle`;
+        const urlDelete = `https://localhost:${port}/api/Movies`;
+        const urlFilterByTitle = `https://localhost:${port}/api/Movies/getByTitle`;
         const urlFilterByDate = `https://localhost:${port}/api/Movies/filterByDate`;
 
         $(document).ready(function () {
             retriveFromServer();
+
+
+            $('#filterTitleBtn').prop('disabled', true);
+            $('#filterDateBtn').prop('disabled', true);
+
+
+            $('#filterTitle').on('input', function () {
+                const title = $(this).val();
+                $('#filterTitleBtn').prop('disabled', title.trim() === '');
+            });
+
+
+            $('#startDate, #endDate').on('input', function () {
+                const startDate = $('#startDate').val();
+                const endDate = $('#endDate').val();
+                $('#filterDateBtn').prop('disabled', startDate === '' || endDate === '');
+            });
 
             $('#filterTitleBtn').click(function () {
                 const title = $('#filterTitle').val();
@@ -113,16 +172,34 @@
             });
 
             $('#filterDateBtn').click(function () {
-                const date = $('#filterDate').val();
-                filterMoviesByDate(date);
+                const startDate = $('#startDate').val();
+                const endDate = $('#endDate').val();
+                filterMoviesByDate(startDate, endDate);
+            });
+
+            $('#clearFilterBtn').click(function () {
+                clearFilter();
             });
         });
+
+        function showNotification(message, type) {
+            const notification = $('#notification');
+            notification
+                .removeClass('success error info')
+                .addClass(type)
+                .text(message)
+                .fadeIn();
+
+            setTimeout(() => {
+                notification.fadeOut();
+            }, 5000);
+        }
 
         function renderMovies(movies) {
             const moviesContainer = $('#moviesContainer');
             moviesContainer.empty();
             if (movies.length === 0) {
-                alert('No movies found.');
+                showNotification('No movies found.', 'info');
                 return;
             }
             movies.forEach(function (movie) {
@@ -162,27 +239,100 @@
         }
 
         function retriveFromServer() {
+            clearActiveFilter();
             ajaxCall('GET', url1, "", renderMovies, onError);
+        }
+
+        function setActiveFilter(filterText) {
+            const activeFilter = $('#activeFilter');
+            activeFilter.html(`
+                        <span>${filterText}</span>
+                        <button id="clearFilterBtn">X</button>
+                    `);
+            activeFilter.show();
+
+            $('#clearFilterBtn').click(function () {
+                clearFilter();
+            });
+        }
+
+        function clearActiveFilter() {
+            const activeFilter = $('#activeFilter');
+            activeFilter.hide();
+            activeFilter.empty();
+        }
+
+        function clearFilter() {
+            $('#filterTitle').val('').trigger('input');
+            $('#startDate').val('').trigger('input');
+            $('#endDate').val('').trigger('input');
+            retriveFromServer();
+        }
+
+        function showNotification(message, type) {
+            const notification = $('#notification');
+            notification
+                .removeClass('success error info')
+                .addClass(type)
+                .text(message)
+                .fadeIn();
+
+            notification.attr('tabindex', '-1').focus();
+            notification[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => {
+                notification.fadeOut();
+            }, 5000);
+        }
+
+        function onSuccess(response) {
+            if (response) {
+                showNotification('🎉 Success! The movie has been successfully deleted.', 'success');
+            } else {
+                showNotification('ℹ️ No changes were made. The movie might already be deleted.', 'info');
+            }
+        }
+
+        function onError(error) {
+            let errorMessage = '❌ Oops! Something went wrong while processing your request.';
+
+            if (error && error.responseJSON && error.responseJSON.message) {
+                errorMessage = `❌ Error: ${error.responseJSON.message}`;
+            } else if (error && error.status) {
+                errorMessage = `❌ Error ${error.status}: ${error.statusText}`;
+            }
+
+            showNotification(errorMessage, 'error');
         }
 
         function deleteMovie(movieId) {
             ajaxCall('DELETE', `${urlDelete}/${movieId}`, "", function () {
-                alert('Movie deleted successfully!');
+                showNotification('🎉 Success! The movie has been deleted from your list.', 'success');
                 retriveFromServer();
-            }, onError);
+            }, function (error) {
+                onError(error);
+            });
         }
 
         function filterMoviesByTitle(title) {
-            ajaxCall('GET', `${urlFilterByTitle}?title=${title}`, "", renderMovies, onError);
+            ajaxCall('GET', `${urlFilterByTitle}?title=${title}`, "", function (movies) {
+                renderMovies(movies);
+                setActiveFilter(`🔍 Filter applied: Movies with the title "${title}".`);
+            }, function (error) {
+                onError(error);
+            });
         }
 
-        function filterMoviesByDate(date) {
-            ajaxCall('GET', `${urlFilterByDate}?date=${date}`, "", renderMovies, onError);
+        function filterMoviesByDate(startDate, endDate) {
+            ajaxCall('GET', `${urlFilterByDate}?startDate=${startDate}&endDate=${endDate}`, "", function (movies) {
+                renderMovies(movies);
+                setActiveFilter(`📅 Filter applied: Movies released between ${startDate} and ${endDate}.`);
+            }, function (error) {
+                onError(error);
+            });
         }
 
-        function onError(error) {
-            alert('Error processing request!');
-        }
+
     </script>
 </head>
 <body>
@@ -193,18 +343,17 @@
         </nav>
     </header>
     <div class="container">
+        <div id="notification" class="notification"></div>
         <div class="filters">
             <input type="text" id="filterTitle" placeholder="Filter by Title" />
             <button id="filterTitleBtn">Filter</button>
-            <input type="date" id="filterDate" />
+            <input type="date" id="startDate" placeholder="Start Date" />
+            <input type="date" id="endDate" placeholder="End Date" />
             <button id="filterDateBtn">Filter</button>
         </div>
+        <div id="activeFilter" class="active-filter" style="display: none;"></div>
         <h1 id="title">My Movies</h1>
         <div id="moviesContainer"></div>
     </div>
 </body>
 </html>
-
-
-
-

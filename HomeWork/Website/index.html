@@ -5,7 +5,7 @@
     <meta http-equiv="cache-control" content="no-cache" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="-1" />
-    <title></title>
+    <title>My Movies</title>
     <link href="styles/style.css" rel="stylesheet" />
     <script src="dataBase/movies-db.js"></script>
     <script src="scripts/ajaxCalls.js"></script>
@@ -92,17 +92,43 @@
             ajaxCall('POST', url1, JSON.stringify(movie), onSuccess, onError);
         }
 
+        function showNotification(message, type) {
+            const notification = $('#notification');
+            notification
+                .removeClass('success error info')
+                .addClass(type)
+                .text(message)
+                .fadeIn();
+
+            notification.attr('tabindex', '-1').focus();
+            notification[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => {
+                notification.fadeOut();
+            }, 5000);
+        }
+
+
         function onSuccess(response) {
             if (response) {
-                alert('Movie added to cart!');
+                showNotification('🎉 Success! The movie has been added to your cart. You can view it in "My Movies".', 'success');
             } else {
-                alert('Movie is already in the cart.');
+                showNotification('ℹ️ This movie is already in your cart. No duplicate entries allowed.', 'info');
             }
         }
 
         function onError(error) {
-            alert('Error sending movie to server!');
+            let errorMessage = '❌ Oops! Something went wrong while processing your request.';
+
+            if (error && error.responseJSON && error.responseJSON.message) {
+                errorMessage = `❌ Error: ${error.responseJSON.message}`;
+            } else if (error && error.status) {
+                errorMessage = `❌ Error ${error.status}: ${error.statusText}`;
+            }
+
+            showNotification(errorMessage, 'error');
         }
+
     </script>
 </head>
 <body>
@@ -113,6 +139,7 @@
         </nav>
     </header>
     <div class="container">
+        <div id="notification" class="notification"></div>
         <button id="loadBtn">Load Movies</button>
         <h1 id="title"></h1>
         <div id="moviesContainer"></div>
