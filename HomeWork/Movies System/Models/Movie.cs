@@ -87,7 +87,7 @@
 
         public static List<Movie> GetByTitle(string title) 
         {
-            return moviesList.Where(m => m.PrimaryTitle.Contains(title)).ToList();
+            return moviesList.Where(m => m.PrimaryTitle.ToLower().Contains(title.ToLower())).ToList();
         }
 
         public static List<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
