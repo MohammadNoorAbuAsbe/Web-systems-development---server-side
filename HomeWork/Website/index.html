@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="Expires" content="0" />
     <title>My Movies</title>
     <link href="styles/style.css" rel="stylesheet" />
     <script src="dataBase/movies-db.js"></script>
@@ -12,6 +12,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+    <script src="scripts/shared.js"></script>
     <script>
         $(document).ready(renderMovies);
 
@@ -23,43 +24,7 @@
                 $(this).hide();
                 title.text("All Movies");
                 moviesContainer.empty();
-                movies.forEach(function (movie) {
-                    const movieCard = $('<div>').addClass('movie-card');
-                    const movieImage = $('<img>').attr('src', movie.primaryImage).attr('alt', movie.primaryTitle);
-                    const movieTitle = $('<h3>').text(`${movie.primaryTitle} (${movie.startYear})`);
-                    const movieDescription = $('<p>').text(movie.description);
-                    const movieDetails = $('<div>').addClass('movie-details');
-
-                    const details = [
-                        { label: 'Release Date', value: movie.releaseDate },
-                        { label: 'Language', value: movie.language },
-                        { label: 'Budget', value: movie.budget },
-                        { label: 'Gross Worldwide', value: movie.grossWorldwide },
-                        { label: 'Genres', value: Array.isArray(movie.genres) ? movie.genres.join(",") : movie.genres },
-                        { label: 'Adult', value: movie.isAdult },
-                        { label: 'Runtime', value: `${movie.runtimeMinutes} minutes` },
-                        { label: 'Rating', value: movie.averageRating },
-                        { label: 'Votes', value: movie.numVotes }
-                    ];
-
-                    details.forEach(detail => {
-                        const detailElement = $('<div>').addClass('movie-detail');
-                        const detailLabel = $('<strong>').text(detail.label);
-                        const detailValue = $('<span>').text(detail.value);
-                        detailElement.append(detailLabel, detailValue);
-                        movieDetails.append(detailElement);
-                    });
-
-                    const addButton = $('<button>').addClass('btn').data('id', movie.id).text('Add to Cart');
-
-                    movieCard.append(movieImage, movieTitle, movieDescription, movieDetails, addButton);
-                    moviesContainer.append(movieCard);
-                });
-
-                $('.btn').click(function () {
-                    const movieId = $(this).data('id');
-                    addToCart(movieId);
-                });
+                renderMovieCards('Add to Cart', addToCart, moviesContainer, movies);
             });
         }
 
@@ -85,50 +50,21 @@
             sendToServer(movieToSend);
         }
 
-        const port = 7246;
-        const url1 = `https://localhost:${port}/api/Movies/addToCart`;
-
         function sendToServer(movie) {
-            ajaxCall('POST', url1, JSON.stringify(movie), onSuccess, onError);
+            ajaxCall(
+                'POST',
+                urlAddToCart,
+                JSON.stringify(movie),
+                (response) => handleSuccess(
+                    response,
+                    '🎉 Success! The movie has been added to your cart. You can view it in "My Movies".',
+                    'ℹ️ This movie is already in your cart. No duplicate entries allowed.'
+                ),
+                (error) => handleError(
+                    error
+                )
+            );
         }
-
-        function showNotification(message, type) {
-            const notification = $('#notification');
-            notification
-                .removeClass('success error info')
-                .addClass(type)
-                .text(message)
-                .fadeIn();
-
-            notification.attr('tabindex', '-1').focus();
-            notification[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            setTimeout(() => {
-                notification.fadeOut();
-            }, 5000);
-        }
-
-
-        function onSuccess(response) {
-            if (response) {
-                showNotification('🎉 Success! The movie has been added to your cart. You can view it in "My Movies".', 'success');
-            } else {
-                showNotification('ℹ️ This movie is already in your cart. No duplicate entries allowed.', 'info');
-            }
-        }
-
-        function onError(error) {
-            let errorMessage = '❌ Oops! Something went wrong while processing your request.';
-
-            if (error && error.responseJSON && error.responseJSON.message) {
-                errorMessage = `❌ Error: ${error.responseJSON.message}`;
-            } else if (error && error.status) {
-                errorMessage = `❌ Error ${error.status}: ${error.statusText}`;
-            }
-
-            showNotification(errorMessage, 'error');
-        }
-
     </script>
 </head>
 <body>
