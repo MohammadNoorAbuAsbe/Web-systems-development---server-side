@@ -8,26 +8,34 @@ const urlFilterByDate = baseURL + "/filterByDate";
 
 function renderMovieCards(buttonText, buttonFunction, moviesContainer, moviesList)
 {
-    moviesList.forEach(function (movie)
-    {
+    moviesList.forEach(function (movie) {
         const movieCard = $('<div>').addClass('movie-card');
         const movieImage = $('<img>').attr('src', movie.primaryImage).attr('alt', movie.primaryTitle);
-        const movieTitle = $('<h3>').text(`${movie.primaryTitle} (${movie.startYear})`);
+        const movieTitle = $('<h3>').text(`${ movie.primaryTitle }(${ movie.startYear })`);
         const movieDescription = $('<p>').text(movie.description);
         const movieDetails = $('<div>').addClass('movie-details');
 
-        const details =
-            [
-                { label: 'Release Date', value: movie.releaseDate },
-                { label: 'Language', value: movie.language },
-                { label: 'Budget', value: movie.budget },
-                { label: 'Gross Worldwide', value: movie.grossWorldwide },
-                { label: 'Genres', value: Array.isArray(movie.genres) ? movie.genres.join(",") : movie.genres },
-                { label: 'Adult', value: movie.isAdult },
-                { label: 'Runtime', value: `${movie.runtimeMinutes} minutes` },
-                { label: 'Rating', value: movie.averageRating },
-                { label: 'Votes', value: movie.numVotes }
-            ];
+        const details = [
+
+            { label: 'Language', value: movie.language },
+            { label: 'Budget', value: movie.budget },
+            { label: 'Gross Worldwide', value: movie.grossWorldwide },
+            { label: 'Adult', value: movie.isAdult },
+
+        ];
+
+        const ratingBadge = $('<div>').addClass('rating-badge').text(`⭐ ${ movie.averageRating }`);
+        const genresContainer = $('<div>').addClass('genres-container');
+        const genres = Array.isArray(movie.genres) ? movie.genres : movie.genres.split(",");
+        genres.forEach(genre => {
+            const chip = $('<span>').addClass('genre-chip').text(genre.trim());
+            genresContainer.append(chip);
+        });
+        const releaseDateElement = $('<div>').addClass('release-date').text(`🎬 Release Date: ${ movie.releaseDate }`);
+        movieCard.append(releaseDateElement);
+        const votesBadge = $('<div>').addClass('votes-badge').text(` ${movie.numVotes} Votes`);
+        const runtimeBadge = $('<div>').addClass('runtime-badge').text(`${ movie.runtimeMinutes } min`);
+
 
         details.forEach(detail => {
             const detailElement = $('<div>').addClass('movie-detail');
@@ -37,11 +45,12 @@ function renderMovieCards(buttonText, buttonFunction, moviesContainer, moviesLis
             movieDetails.append(detailElement);
         });
 
+
         const button = $('<button>').addClass('btn').data('id', movie.id).text(buttonText).click(function () {
             buttonFunction(movie.id)
         });
 
-        movieCard.append(movieImage, movieTitle, movieDescription, movieDetails, button);
+        movieCard.append(ratingBadge, votesBadge, movieImage, movieTitle, releaseDateElement, genresContainer, movieDescription, movieDetails, runtimeBadge, button);
         moviesContainer.append(movieCard);
     });
 }
