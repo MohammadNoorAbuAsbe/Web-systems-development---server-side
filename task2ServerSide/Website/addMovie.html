@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="scripts/ajaxCalls.js"></script>
+    <style>
+
+     
+        body {
+            background-color: #0d0d0d;
+            color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        form {
+            background-color: #1a1a1a;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-weight: 600;
+            font-size: 15px;
+            color: #ddd;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        input[type="number"],
+        input[type="date"],
+        input[list],
+        textarea {
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #f0f0f0;
+            font-size: 15px;
+            margin-top: 6px;
+            transition: border-color 0.3s ease;
+        }
+
+            input:focus, textarea:focus {
+                outline: none;
+                border-color: #3a5ef7;
+            }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            margin-top: 10px;
+        }
+
+        button {
+            background: #182848;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+            button:hover {
+                background-color: #6a7cff;
+                transform: scale(1.05);
+            }
+
+        .error {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        ::placeholder {
+            color: #aaa;
+        }
+    
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $("#movieForm").submit(addNewMovie)
+        })
+
+        function addNewMovie() {
+
+        }
+    </script>
+</head>
+<body>
+
+    <form id="movieForm">
+        <h2>Add a New Movie 🎬</h2>
+
+        <label>
+            Url:
+            <input type="text" name="url" >
+        </label>
+
+        <label>
+            Primary Title:
+            <input type="text" name="primaryTitle" required>
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Description:
+            <textarea name="description"></textarea>
+        </label>
+
+        <label>
+            Primary Image:
+            <input type="url" name="primaryImage" required>
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Year:
+            <input type="number" name="year" required>
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Release Date:
+            <input type="date" name="releaseDate" required>
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Language:
+            <input list="languages" name="language" required>
+            <datalist id="languages">
+                <option value="English">
+                <option value="Hebrew">
+                <option value="Spanish">
+                <option value="French">
+                <option value="German">
+            </datalist>
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Budget:
+            <input type="number" name="budget" min="100000">
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Gross Worldwide:
+            <input type="number" name="grossWorldwide" value="0">
+        </label>
+
+        <label>
+            Genres (comma-separated):
+            <input type="text" name="genres" id="genresInput" list="genresList" placeholder="e.g. Action,Drama">
+            <datalist id="genresList">
+                <option value="Action">
+                <option value="Drama">
+                <option value="Comedy">
+                <option value="Horror">
+                <option value="Science Fiction">
+                <option value="Romance">
+            </datalist>
+        </label>
+
+        <label>
+            Is Adult:
+            <input type="checkbox" name="isAdult">
+        </label>
+
+        <label>
+            Runtime Minutes:
+            <input type="number" name="runtimeMinutes" required>
+            <span class="error"></span>
+        </label>
+
+        <label>
+            Average Rating:
+            <input type="number" name="averageRating" value="0">
+        </label>
+
+        <label>
+            Number of Votes:
+            <input type="number" name="numVotes" value="0">
+        </label>
+
+        <button type="submit">➕ Add Movie</button>
+    </form>
+
+</body>
+</html>

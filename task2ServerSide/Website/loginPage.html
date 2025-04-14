@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="scripts/ajaxCalls.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#loginForm").submit(checkUser);
+            $("#registerForm").submit(registerUser);
+
+            $("#openRegister").click(function (e) {
+                e.preventDefault();
+                $("#registerForm").removeClass("hide");
+                $("#loginForm").addClass("hide");
+            });
+
+            $("#openlogin").click(function (e) {
+                e.preventDefault();
+                $("#registerForm").addClass("hide");
+                $("#loginForm").removeClass("hide");
+            });
+
+        })
+
+        function checkUser() {
+
+            const username = $("#loginUsername").val();
+            const password = $("#loginPassword").val();
+
+            const url = "https://localhost:7246/api/Users"
+
+            ajaxCall("GET", url, "", function (res) {
+                console.log(res)
+                const user = res.find(u => u.name === username && u.password === password);
+                console.log(user)
+                if (user) {
+                    alert("Login successful. Welcome " + user.name + "!");
+                    $("#loginError").text("");
+                    window.location.href = "index.html";
+                } else {
+                    $("#loginError").text("Invalid username or password.");
+                }
+            }, function (err) {
+                console.log(err);
+                $("#loginError").text("Error contacting server.");
+            });
+            return false;
+        }
+
+        function registerUser(e) {
+            e.preventDefault();
+
+            const id = $("input[name='id']").val();
+            const name = $("input[name='name']").val();
+            const email = $("input[name='email']").val();
+            const password = $("input[name='password']").val();
+
+
+            const nameRegex = /^[A-Za-z]{2,}$/;
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+            if (!nameRegex.test(name)) {
+                $("#regError").text("Name must be at least 2 letters and contain letters only.");
+                return;
+            }
+
+            if (!passwordRegex.test(password)) {
+                $("#regError").text("Password must be 8+ characters, include at least 1 uppercase letter and 1 number.");
+                return;
+            }
+
+            const user = {
+                id: id,
+                name: name,
+                email: email,
+                password: password,
+                active: true
+            };
+
+            console.log("Registering user:", user);
+            const url = "https://localhost:7246/api/Users";
+
+            ajaxCall("POST", url, JSON.stringify(user), function (res) {
+                alert("Registration successful! You can now log in.");
+                $("#regError").text("");
+                $("#registerForm")[0].reset();
+                $("#registerForm").addClass("hide");
+                $("#loginForm").removeClass("hide");
+            }, function (err) {
+                console.log(err);
+                $("#regError").text("Registration failed. Try again.");
+            });
+
+            return false;
+        }
+
+    </script>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+    <style>
+    body {
+        background-color: #0d0d0d;
+        color: #f0f0f0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    form {
+        background-color: #1a1a1a;
+        padding: 30px 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    form label {
+        font-weight: 600;
+        font-size: 16px;
+        display: flex;
+        flex-direction: column;
+        color: #ddd;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        padding: 10px;
+        border: 1px solid #444;
+        border-radius: 8px;
+        background-color: #2a2a2a;
+        color: #f0f0f0;
+        font-size: 16px;
+        margin-top: 5px;
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #3a5ef7;
+    }
+
+    button {
+        background: #182848;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 30px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background-color: #6a7cff;
+        transform: scale(1.05);
+    }
+
+    .error {
+        color: #ff6b6b;
+        font-size: 14px;
+        margin-top: -10px;
+    }
+
+    a {
+        color: #3a5ef7;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    a:hover {
+        color: #6a7cff;
+    }
+
+    .hide {
+        display: none;
+    }
+
+    p {
+        font-size: 14px;
+        text-align: center;
+    }
+</style>
+
+</head>
+<body>
+
+    <form id="loginForm">
+        <h2>Welcome Back 🎬</h2>
+        <label>Username: <input type="text" id="loginUsername" required></label><br><br>
+        <label>Password: <input type="password" id="loginPassword" required></label><br><br>
+        <button type="submit">Login</button>
+        <p class="error" id="loginError"></p>
+        <p>New user? <a href="#" id="openRegister">Register here</a></p>
+
+    </form>
+
+
+    <form id="registerForm" class="hide">
+        <h2>Create an Account 🍿</h2>
+        <label>Id: <input type="text" name="id" required></label><br><br>
+        <label>Name: <input type="text" name="name" required></label><br><br>
+        <label>Email: <input type="email" name="email" required></label><br><br>
+        <label>Password: <input type="password" name="password" required></label><br><br>
+        <button type="submit">Register</button>
+        <p>already have an acount? <a href="#" id="openlogin">login here</a></p>
+        <p class="error" id="regError"></p>
+    </form>
+</body>
+</html>
