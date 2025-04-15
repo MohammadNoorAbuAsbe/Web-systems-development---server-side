@@ -34,11 +34,17 @@
     <div class="container">
         <div id="notification" class="notification"></div>
         <div class="filters">
-            <input type="text" id="filterTitle" placeholder="Filter by Title" />
-            <button id="filterTitleBtn">Filter</button>
-            <input type="date" id="startDate" placeholder="Start Date" />
-            <input type="date" id="endDate" placeholder="End Date" />
-            <button id="filterDateBtn">Filter</button>
+            <!-- Title Filter -->
+            <label for="filterTitle" class="filter-label">Search by Title</label>
+            <input type="text" id="filterTitle" placeholder="Enter movie title..." />
+            <button id="filterTitleBtn">Search</button>
+
+            <!-- Date Filters -->
+            <label for="startDate" class="filter-label">From Date</label>
+            <input type="date" id="startDate" />
+            <label for="endDate" class="filter-label">To Date</label>
+            <input type="date" id="endDate" />
+            <button id="filterDateBtn">Filter by Date</button>
         </div>
         <div id="activeFilter" class="active-filter"></div>
         <h1 id="title">My Movies</h1>

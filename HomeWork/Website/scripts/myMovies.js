@@ -82,13 +82,13 @@ function deleteMovie(movieId) {
 function filterMoviesByTitle(title) {
     ajaxCall('GET', `${urls.filterByTitle}?title=${title}`, "", function (movies) {
         renderMovies(movies);
-        setActiveFilter(`🔍 Filter applied: Movies with the title "${title}".`);
+        setActiveFilter(`🔍 Filter applied: Movies with the title "${title}"`);
     }, handleError);
 }
 
 function filterMoviesByDate(startDate, endDate) {
     ajaxCall('GET', `${urls.filterByDate}?startDate=${startDate}&endDate=${endDate}`, "", function (movies) {
         renderMovies(movies);
-        setActiveFilter(`📅 Filter applied: Movies released between ${startDate} and ${endDate}.`);
+        setActiveFilter(`📅 Filter applied: Movies released between ${formatDate(startDate)} and ${formatDate(endDate)}`);
     }, handleError);
 }

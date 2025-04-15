@@ -37,8 +37,8 @@
             createDetailElement('Language', movie.language),
             createDetailElement('For Adults?', movie.isAdult ? 'Yes' : 'No'),
             createDetailElement('Release Date', movie.releaseDate ? formatDate(movie.releaseDate) : 'N/A'),
-            createDetailElement('Budget', movie.budget ? numberWithCommas(parseInt(movie.budget)) : 'N/A'),
-            createDetailElement('Gross', movie.grossWorldwide ? numberWithCommas(parseInt(movie.grossWorldwide)) : 'N/A')
+            createDetailElement('Budget', movie.budget && movie.budget !== -1 ? numberWithCommas(parseInt(movie.budget)) : 'N/A'),
+            createDetailElement('Gross', movie.grossWorldwide && movie.grossWorldwide !== -1 ? numberWithCommas(parseInt(movie.grossWorldwide)) : 'N/A')
         );
 
         const actionButton = $('<button>').addClass('btn')
