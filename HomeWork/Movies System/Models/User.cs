@@ -2,17 +2,17 @@
 {
     public class User
     {
-        #region Fields
+        #region Fields  
         static List<User> usersList = new List<User>();
 
         int id;
-        string name;
-        string email;
-        string password;
+        string name = string.Empty;
+        string email = string.Empty;
+        string password = string.Empty;
         bool active = true;
         #endregion
 
-        #region Constructors
+        #region Constructors  
         public User(int id, string name, string email, string password, bool active)
         {
             Id = id;
@@ -22,12 +22,12 @@
             Active = active;
         }
 
-        public User() 
+        public User()
         {
         }
         #endregion
 
-        #region Properties
+        #region Properties  
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public string Email { get => email; set => email = value; }
@@ -35,7 +35,7 @@
         public bool Active { get => active; set => active = value; }
         #endregion
 
-        #region POST Methods
+        #region POST Methods  
         public static bool Insert(User user)
         {
             bool result = false;
@@ -48,7 +48,7 @@
         }
         #endregion
 
-        #region GET Methods
+        #region GET Methods  
         public static List<User> Read()
         {
             return usersList;

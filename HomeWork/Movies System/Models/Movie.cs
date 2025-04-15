@@ -6,16 +6,16 @@
         static List<Movie> moviesList = new List<Movie>();
 
         int id;
-        string url;
-        string primaryTitle;
-        string description;
-        string primaryImage;
+        string url = string.Empty;
+        string primaryTitle = string.Empty;
+        string description = string.Empty;
+        string primaryImage = string.Empty;
         int year;
         DateTime releaseDate;
-        string language;
+        string language = string.Empty;
         double budget;
         double grossWorldwide;
-        string genres;
+        string genres = string.Empty;
         bool isAdult;
         int runtimeMinutes;
         float averageRating;
@@ -71,7 +71,7 @@
             bool result = false;
             if (!moviesList.Any(m => m.PrimaryTitle == movie.PrimaryTitle))
             {
-                movie .Id = moviesList.Count > 0 ? moviesList.Max(m => m.Id) + 1 : 1;
+                movie.Id = moviesList.Count > 0 ? moviesList.Max(m => m.Id) + 1 : 1;
                 moviesList.Add(movie);
                 result = true;
             }
@@ -100,7 +100,7 @@
         public static bool RemoveFromList(int id)
         {
             bool result = false;
-            Movie movieToRemove = moviesList.FirstOrDefault(m => m.Id == id);
+            Movie? movieToRemove = moviesList.FirstOrDefault(m => m.Id == id);
             if (movieToRemove != null)
             {
                 moviesList.Remove(movieToRemove);

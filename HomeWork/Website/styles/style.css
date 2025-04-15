@@ -1,4 +1,174 @@
-﻿body {
+﻿#clearFilterBtn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+    #clearFilterBtn:hover {
+        background-color: #c82333;
+        transform: scale(1.1);
+    }
+
+    #clearFilterBtn:active {
+        transform: scale(0.95);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+#notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    border-radius: 8px;
+    background: #1a1a1a;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    max-width: 80%;
+    backdrop-filter: blur(5px);
+}
+
+    #notification::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(26,26,26,0.9), rgba(40,40,40,0.9));
+        z-index: -1;
+        border-radius: inherit;
+    }
+
+    #notification.success {
+        border-left: 4px solid #28a745;
+    }
+
+    #notification.error {
+        border-left: 4px solid #dc3545;
+    }
+
+    #notification.info {
+        border-left: 4px solid #17a2b8;
+    }
+
+.notification-close {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0 0 0 15px;
+    font-size: 1.2em;
+}
+
+
+.details-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 15px;
+    align-items: baseline;
+}
+
+.detail-label {
+    color: #6a7cff;
+    font-weight: 600;
+    text-align: left; 
+    white-space: nowrap;
+    padding-right: 10px;
+    min-width: 80px;
+}
+
+.detail-value {
+    color: #ddd;
+    text-align: right;
+    word-break: break-word;
+    padding-left: 10px;
+    justify-self: end;
+}
+
+.secondary-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    background: rgba(26, 26, 26, 0.95);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.movie-description {
+    font-size: 0.9em;
+    line-height: 1.4;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.detail-item {
+    display: contents;
+}
+
+.movie-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    text-align: left;
+    font-size: 14px;
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid #eee;
+    color: #bbb;
+}
+
+.movie-card {
+    background-color: #1a1a1a;
+    padding: 20px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.movie-card:hover .secondary-info {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.primary-content {
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .primary-content {
+    opacity: 0.2;
+}
+
+.btn {
+    position: relative;
+    z-index: 2;
+}
+
+body {
     background-color: #0d0d0d;
     color: #f0f0f0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -74,20 +244,6 @@ header {
     flex-wrap: wrap;
 }
 
-.movie-card {
-    background-color: #1a1a1a;
-    padding: 20px;
-    width: 350px;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
     .movie-card:hover {
         transform: translateY(-10px);
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
@@ -121,7 +277,6 @@ header {
         margin: 10px 0 20px;
         line-height: 1.4;
         overflow: hidden;
-        flex-grow: 1;
     }
 
     .movie-card button {
@@ -139,15 +294,6 @@ header {
             background-color: #6a7cff;
             transform: scale(1.05);
         }
-
-.movie-details {
-    text-align: left;
-    font-size: 14px;
-    margin-top: 10px;
-    padding: 10px;
-    border-top: 1px solid #eee;
-    color: #bbb;
-}
 
 .movie-detail {
     margin-bottom: 6px;
@@ -254,6 +400,12 @@ header {
             background-color: #0056b3;
         }
 
+button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+}
 
 .votes-badge {
     background: linear-gradient(to right, #ffd700, #ffa500);
