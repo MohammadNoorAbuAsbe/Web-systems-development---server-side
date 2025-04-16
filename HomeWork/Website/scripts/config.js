@@ -4,7 +4,7 @@ const CONFIG = {
         baseURL: `https://localhost:${7246}/api/Movies`,
     },
     production: {
-        baseURL: 'https://proj.ruppin.ac.il/cgroup10/test2/tar1/api/',
+        baseURL: 'https://proj.ruppin.ac.il/cgroup10/test2/tar1/api/Movies',
     },
 };
 
