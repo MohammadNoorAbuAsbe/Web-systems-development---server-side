@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="styles/style.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="scripts/ajaxCalls.js"></script>
+
+    <script>$(document).ready(function () {
+            $("#movieForm").submit(addNewMovie)
+        })
+
+        function addNewMovie(e) {
+            e.preventDefault();
+            $(".error").text("");
+
+            const url = $("input[name='url']").val();
+            const primaryTitle = $("input[name='primaryTitle']").val();
+            const description = $("input[name='description']").val();
+            const primaryImage = $("input[name='primaryImage']").val();
+            const year = $("input[name='year']").val();
+            const releaseDate = $("input[name='releaseDate']").val();
+            const language = $("input[name='language']").val();
+            const budget = $("input[name='budget']").val();
+            const grossWorldwide = $("input[name='grossWorldwide']").val();
+            const genres = $("input[name='genres']").val();
+            const isAdult = $("input[name='isAdult']").is(":checked");
+            const runtimeMinutes = $("input[name='runtimeMinutes']").val();
+            const averageRating = $("input[name='averageRating']").val();
+            const numVotes = $("input[name='numVotes']").val();
+
+
+
+            let valid = true;
+            if (!primaryTitle) {
+                $("input[name='primaryTitle']").next(".error").text("Primary Title is required.");
+                valid = false;
+            }
+            if (!primaryImage) {
+                $("input[name='primaryImage']").next(".error").text("Primary Image is required.");
+                valid = false;
+            }
+            if (!releaseDate) {
+                $("input[name='releaseDate']").next(".error").text("release Date is required.");
+                valid = false;
+            }
+            if (!year) {
+                $("input[name='year']").next(".error").text("year is required.");
+                valid = false;
+            }
+            if (!language) {
+                $("input[name='language']").next(".error").text("language is required.");
+                valid = false;
+            }
+            if (!runtimeMinutes) {
+                $("input[name='runtimeMinutes']").next(".error").text("runtimeMinutes is required.");
+                valid = false;
+            }
+            if (budget < 100000) {
+                $("input[name='budget']").next(".error").text("budget must be at least 100,000.");
+                valid = false;
+            }
+            if (!valid) return;
+
+            const movie = {
+                url: url,
+                primaryTitle: primaryTitle,
+                description: description,
+                primaryImage: primaryImage,
+                year: year,
+                releaseDate: releaseDate,
+                language: language,
+                budget: budget,
+                grossWorldwide: grossWorldwide,
+                genres: genres,
+                isAdult: isAdult,
+                runtimeMinutes: runtimeMinutes,
+                averageRating: averageRating,
+                numVotes: numVotes
+            };
+
+            const serverUrl = "https://localhost:7246/api/Users";
+            ajaxCall("POST", serverUrl, JSON.stringify(movie), function (res) {
+                alert("Movie added successfully!");
+                $("#movieForm")[0].reset();
+            }, function (err) {
+                console.log(err);
+                alert("Failed to add movie.");
+            });
+
+
+        }</script>
+</head>
+<body>
+    <div class="add-movie-container">
+        <form id="movieForm">
+            <h2>Add a New Movie 🎬</h2>
+
+            <label>
+                Url:
+                <input type="text" name="url">
+            </label>
+
+            <label>
+                Primary Title:
+                <input type="text" name="primaryTitle" required>
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Description:
+                <textarea name="description"></textarea>
+            </label>
+
+            <label>
+                Primary Image:
+                <input type="url" name="primaryImage" required>
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Year:
+                <input type="number" name="year" required>
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Release Date:
+                <input type="date" name="releaseDate" required>
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Language:
+                <input list="languages" name="language" required>
+                <datalist id="languages">
+                    <option value="English">
+                    <option value="Hebrew">
+                    <option value="Spanish">
+                    <option value="French">
+                    <option value="German">
+                </datalist>
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Budget:
+                <input type="number" name="budget" min="100000">
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Gross Worldwide:
+                <input type="number" name="grossWorldwide" value="0">
+            </label>
+
+            <label>
+                Genres (comma-separated):
+                <input type="text" name="genres" id="genresInput" list="genresList" placeholder="e.g. Action,Drama">
+                <datalist id="genresList">
+                    <option value="Action">
+                    <option value="Drama">
+                    <option value="Comedy">
+                    <option value="Horror">
+                    <option value="Science Fiction">
+                    <option value="Romance">
+                </datalist>
+            </label>
+
+            <label>
+                Is Adult:
+                <input type="checkbox" name="isAdult">
+            </label>
+
+            <label>
+                Runtime Minutes:
+                <input type="number" name="runtimeMinutes" required>
+                <span class="error"></span>
+            </label>
+
+            <label>
+                Average Rating:
+                <input type="number" name="averageRating" value="0">
+            </label>
+
+            <label>
+                Number of Votes:
+                <input type="number" name="numVotes" value="0">
+            </label>
+
+            <button type="submit">➕ Add Movie</button>
+        </form>
+    </div>
+</body>
+</html>
