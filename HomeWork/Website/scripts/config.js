@@ -1,20 +1,32 @@
 ﻿// Configuration Constants
-const PORT = 7246;
+const CONFIG = {
+    localhost: {
+        baseURL: `https://localhost:${7246}/api/Movies`,
+    },
+    production: {
+        baseURL: 'https://proj.ruppin.ac.il/cgroup10/test2/tar1/api/',
+    },
+};
+
+const isLocalHost = ["localhost", "127.0.0.1"].includes(location.hostname);
+const SERVER_PATH = isLocalHost ? CONFIG.localhost.baseURL : CONFIG.production.baseURL;
+
+
 const ENDPOINTS = {
-    BASE: (port) => `https://localhost:${port}/api/Movies`,
-    ADD_TO_CART: (port) => `${ENDPOINTS.BASE(port)}/addToCart`,
-    CART: (port) => `${ENDPOINTS.BASE(port)}/cart`,
-    DELETE: (port) => ENDPOINTS.BASE(port),
-    FILTER_BY_TITLE: (port) => `${ENDPOINTS.BASE(port)}/getByTitle`,
-    FILTER_BY_DATE: (port) => `${ENDPOINTS.BASE(port)}/filterByDate`,
+    BASE: () => `${SERVER_PATH}`,
+    ADD_TO_CART: () => `${ENDPOINTS.BASE()}/addToCart`,
+    CART: () => `${ENDPOINTS.BASE()}/cart`,
+    DELETE: () => ENDPOINTS.BASE(),
+    FILTER_BY_TITLE: () => `${ENDPOINTS.BASE()}/getByTitle`,
+    FILTER_BY_DATE: () => `${ENDPOINTS.BASE()}/filterByDate`,
 };
 
 // URL Constants
-const baseURL = ENDPOINTS.BASE(PORT);
+const baseURL = ENDPOINTS.BASE();
 const urls = {
-    addToCart: ENDPOINTS.ADD_TO_CART(PORT),
-    getCart: ENDPOINTS.CART(PORT),
-    delete: ENDPOINTS.DELETE(PORT),
-    filterByTitle: ENDPOINTS.FILTER_BY_TITLE(PORT),
-    filterByDate: ENDPOINTS.FILTER_BY_DATE(PORT),
+    addToCart: ENDPOINTS.ADD_TO_CART(),
+    getCart: ENDPOINTS.CART(),
+    delete: ENDPOINTS.DELETE(),
+    filterByTitle: ENDPOINTS.FILTER_BY_TITLE(),
+    filterByDate: ENDPOINTS.FILTER_BY_DATE(),
 };
