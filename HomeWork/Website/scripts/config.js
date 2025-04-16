@@ -11,7 +11,6 @@ const CONFIG = {
 const isLocalHost = ["localhost", "127.0.0.1"].includes(location.hostname);
 const SERVER_PATH = isLocalHost ? CONFIG.localhost.baseURL : CONFIG.production.baseURL;
 
-
 const ENDPOINTS = {
     BASE: () => `${SERVER_PATH}`,
     ADD_TO_CART: () => `${ENDPOINTS.BASE()}/addToCart`,
