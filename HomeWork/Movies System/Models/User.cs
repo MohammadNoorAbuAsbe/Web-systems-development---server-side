@@ -35,23 +35,35 @@
         public bool Active { get => active; set => active = value; }
         #endregion
 
-        #region POST Methods  
-        public static bool Insert(User user)
-        {
-            bool result = false;
-            if (!usersList.Any(u => u.Id == user.Id))
-            {
-                usersList.Add(user);
-                result = true;
-            }
-            return result;
-        }
-        #endregion
-
-        #region GET Methods  
+        #region GET Methods
         public static List<User> Read()
         {
             return usersList;
+        }
+        #endregion
+
+        #region Authentication Methods
+        public static bool Register(User user)
+        {
+            if (usersList.Any(u => u.Email == user.Email))
+            {
+                return false;
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
+
+            usersList.Add(user);
+            return true;
+        }
+
+        public static bool Login(string email, string password)
+        {
+            var user = usersList.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                return false;
+            }
+            return BCrypt.Net.BCrypt.Verify(password, user.Password);
         }
         #endregion
     }
