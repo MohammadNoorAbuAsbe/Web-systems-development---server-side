@@ -40,30 +40,50 @@
         {
             return usersList;
         }
+
+        public static User? GetByEmail(string email)
+        {
+            return usersList.FirstOrDefault(u => u.Email == email);
+        }
+
         #endregion
 
         #region Authentication Methods
+        // The registerLock ensures thread safety when multiple threads attempt to register users simultaneously.
+        // Without this lock, concurrent access to the usersList could result in concurrency Issue, 
+        // such as duplicate registrations or inconsistent state of the list.
+        private static readonly object registerLock = new object();
         public static bool Register(User user)
         {
-            if (usersList.Any(u => u.Email == user.Email))
+            lock (registerLock)
             {
-                return false;
+                if (usersList.Any(u => u.Email == user.Email))
+                {
+                    return false;
+                }
+
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
+                usersList.Add(user);
+                return true;
             }
-
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
-
-            usersList.Add(user);
-            return true;
         }
 
-        public static bool Login(string email, string password)
+        public static object? Login(string email, string password)
         {
             var user = usersList.FirstOrDefault(u => u.Email == email);
-            if (user == null)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
-                return false;
+                return null;
             }
-            return BCrypt.Net.BCrypt.Verify(password, user.Password);
+
+            // Return a response object excluding sensitive information
+            return new
+            {
+                user.Id,
+                user.Name,
+                user.Email,
+                user.Active
+            };
         }
         #endregion
     }

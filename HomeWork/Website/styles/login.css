@@ -265,3 +265,10 @@ a {
     outline: none;
     border-color: #007BFF;
 }
+
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.6;
+}

@@ -21,26 +21,36 @@ namespace Movies_System.Controllers
         #region POST Methods
         // POST: api/<UsersController>/register
         [HttpPost("register")]
-        [ProducesResponseType(typeof(string), 200)]
-        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(object), 400)]
         public IActionResult Register([FromBody] User user)
         {
             if (Models.User.Register(user))
             {
-                return Ok("User registered successfully");
+                return Ok(new
+                {
+                    Message = "User registered successfully",
+                    Success = true
+                });
             }
-            return BadRequest("Email already exists");
+            return BadRequest(new
+            {
+                Message = "Email already exists",
+                Success = false
+            });
         }
+
 
         // POST: api/<UsersController>/login
         [HttpPost("login")]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(object), 200)]
         [ProducesResponseType(typeof(string), 401)]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            if (Models.User.Login(request.Email, request.Password))
+            var userResponse = Models.User.Login(request.Email, request.Password);
+            if (userResponse != null)
             {
-                return Ok("Login successful");
+                return Ok(userResponse);
             }
             return Unauthorized("Invalid email or password");
         }

@@ -65,11 +65,11 @@ function clearFilter() {
 
 function retriveFromServer() {
     clearActiveFilter();
-    ajaxCall('GET', urls.getCart, "", renderMovies, handleError);
+    ajaxCall('GET', urls.movies.getCart, "", renderMovies, handleError);
 }
 
 function deleteMovie(movieId) {
-    ajaxCall('DELETE', `${urls.delete}/${movieId}`, "", (response) => {
+    ajaxCall('DELETE', `${urls.movies.delete}/${movieId}`, "", (response) => {
         handleSuccess(
             response,
             '🎉 Success! The movie has been deleted from your list.',
@@ -80,14 +80,14 @@ function deleteMovie(movieId) {
 }
 
 function filterMoviesByTitle(title) {
-    ajaxCall('GET', `${urls.filterByTitle}?title=${title}`, "", function (movies) {
+    ajaxCall('GET', `${urls.movies.filterByTitle}?title = ${ title }`, "", function (movies) {
         renderMovies(movies);
         setActiveFilter(`🔍 Filter applied: Movies with the title "${title}"`);
     }, handleError);
 }
 
 function filterMoviesByDate(startDate, endDate) {
-    ajaxCall('GET', `${urls.filterByDate}?startDate=${startDate}&endDate=${endDate}`, "", function (movies) {
+    ajaxCall('GET', `${urls.movies.filterByDate}?startDate = ${ startDate }& endDate=${ endDate }`, "", function (movies) {
         renderMovies(movies);
         setActiveFilter(`📅 Filter applied: Movies released between ${formatDate(startDate)} and ${formatDate(endDate)}`);
     }, handleError);

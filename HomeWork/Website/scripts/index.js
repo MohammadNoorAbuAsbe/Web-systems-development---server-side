@@ -37,7 +37,7 @@ function addToCart(movieId) {
 function sendToServer(movie) {
     ajaxCall(
         'POST',
-        urls.addToCart,
+        urls.movies.addToCart,
         JSON.stringify(movie),
         (response) => handleSuccess(
             response,
