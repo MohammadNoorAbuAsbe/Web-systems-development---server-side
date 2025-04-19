@@ -4,6 +4,7 @@
     container,
     movies
 ) {
+    const user = GetLogedInUser();
     // Use a document fragment to improve performance by minimizing DOM reflows
     const fragment = document.createDocumentFragment();
 
@@ -43,8 +44,14 @@
 
         const actionButton = $('<button>').addClass('btn')
             .text(buttonText)
-            .on('click', () => onButtonClick(movie.id));
-
+            .on('click', () => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                } else {
+                    onButtonClick(movie.id);
+                }
+            });
+    
         movieCard.append(primaryContent, secondaryContent, actionButton);
         fragment.appendChild(movieCard[0]);
     });

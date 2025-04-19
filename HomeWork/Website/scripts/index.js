@@ -1,5 +1,12 @@
-﻿$(document).ready(renderMovies);
-$(document).ready(handleLogedInUserState);
+﻿$(document).ready(SetupPage);
+
+function SetupPage()
+{
+    renderMovies();
+    handleLogedInWelocme();
+    redirectToLogin();
+}
+
 function renderMovies() {
     const moviesContainer = $('#moviesContainer');
     const title = $('#title');
@@ -50,12 +57,23 @@ function sendToServer(movie) {
     );
 }
 
-function handleLogedInUserState() {
+function handleLogedInWelocme() {
     const user = GetLogedInUser();
     const navbar = $('#navbar');
     const userWelcome = $('#userWelcome');
     if (user) {
         navbar.removeClass('guest');
-        userWelcome.text(`Welcome!, ${user.name}`);
+        userWelcome.text(`Welcome ${user.name}!`);
     }
- }
+}
+
+function redirectToLogin() {
+    const link = $('#myMovies');
+    const user = GetLogedInUser();
+    if (!user) {
+        link.click(function (event) {
+            event.preventDefault();
+            window.location.href = 'login.html';
+        });
+    }
+}
