@@ -17,7 +17,26 @@ function getYearFromDate(dateString) {
 }
 
 const getErrorMessage = (error) => {
+    if (error?.responseJSON?.errors) {
+        const validationErrors = error.responseJSON.errors;
+        const messages = Object.keys(validationErrors)
+            .map((key) => validationErrors[key].join(' '))
+            .join(' ');
+        return messages;
+    }
     if (error?.responseJSON?.message) return error.responseJSON.message;
+    if (error?.status === 401 && error?.responseText) {
+        return `Unauthorized: ${error.responseText}`;
+    }
     if (error?.status) return `Error ${error.status}: ${error.statusText}`;
     return 'Oops! Something went wrong while processing your request.';
 };
+
+function GetLogedInUser()
+{
+    const user = localStorage.getItem("user");
+    if (user) {
+        return JSON.parse(user);
+    }
+    return null;
+}

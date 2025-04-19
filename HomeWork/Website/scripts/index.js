@@ -1,5 +1,5 @@
 ﻿$(document).ready(renderMovies);
-
+$(document).ready(handleLogedInUserState);
 function renderMovies() {
     const moviesContainer = $('#moviesContainer');
     const title = $('#title');
@@ -49,3 +49,13 @@ function sendToServer(movie) {
         )
     );
 }
+
+function handleLogedInUserState() {
+    const user = GetLogedInUser();
+    const navbar = $('#navbar');
+    const userWelcome = $('#userWelcome');
+    if (user) {
+        navbar.removeClass('guest');
+        userWelcome.text(`Welcome!, ${user.name}`);
+    }
+ }

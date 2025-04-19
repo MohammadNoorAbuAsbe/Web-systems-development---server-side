@@ -194,15 +194,15 @@ header {
 
     header nav {
         display: flex;
-        justify-content: center;
-        padding: 15px 20px;
+        align-items: center;
+        justify-content: flex-start;
     }
 
         header nav a {
             color: white;
             font-weight: bold;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 18px 15px;
             margin: 0 10px;
             font-size: 18px;
             transition: background-color 0.3s ease;
@@ -212,6 +212,26 @@ header {
                 background-color: #0056b3;
                 border-radius: 5px;
             }
+
+nav.guest #userWelcome {
+    display: none;
+}
+
+nav:not(.guest) #loginLink {
+    display: none;
+}
+
+nav:not(.guest) #userWelcome {
+    margin-left: auto;
+    display: block;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 18px;
+    margin-right: 10px;
+    padding-right: 15px;
+}
+
 
 
 .container {

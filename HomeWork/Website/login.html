@@ -28,8 +28,8 @@
                 <label>Name: <input type="text" id="createName" required pattern="^[A-Za-z]{2,}$" title="Name must be at least 2 letters and contain only letters."></label>
                 <label>Email: <input type="email" id="createEmail" required></label>
                 <label>Password: <input type="password" id="createPassword" required pattern="^(?=.*[A-Z])(?=.*\d).{8,}$" title="Password must be at least 8 characters long, include at least 1 uppercase letter and 1 number."></label>
-                <label>ID: <input type="text" id="createId" required></label>
-                <button type="submit">Register</button>
+                <label>ID: <input type="text" id="createId" required pattern="^\d+$" title="ID must be a numeric value."></label>
+                <button type="submit" id="registerButton">Register</button>
                 <p>Already have an account? <a href="#" id="openLogin">Login here</a></p>
                 <button type="button" class="continue-as-guest secondary-button">Continue As Guest</button>
             </form>
@@ -42,7 +42,7 @@
                 <p class="subtext">Please Sign Into Your Account</p>
                 <label>Email: <input type="text" id="loginEmail" required></label>
                 <label>Password: <input type="password" id="loginPassword" required></label>
-                <button type="submit">Login</button>
+                <button type="submit" id="loginButton">Login</button>
                 <p>Don't have an account? <a href="#" id="openRegister">Sign up now</a></p>
                 <button type="button" class="continue-as-guest secondary-button">Continue As Guest</button>
             </form>

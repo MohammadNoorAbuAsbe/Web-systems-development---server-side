@@ -15,62 +15,49 @@ function setupListeners() {
         });
     });
 
-    openRegister.addEventListener('click', (e) => {
-        e.preventDefault();
-        container.classList.remove('shift-left');
-        container.classList.add('shift-right');
-        blackCoverText.textContent = 'Join Us and Start Your Journey!';
-        registerForm.classList.add('show');
-        loginForm.classList.remove('show');
+    openRegister.addEventListener('click', () => {
+        showRelatedForm('shift-left', 'shift-right', 'Join Us and Start Your Journey!', registerForm, loginForm);
     });
 
-    openLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        container.classList.remove('shift-right');
-        container.classList.add('shift-left');
-        blackCoverText.textContent = 'Welcome Back, We Missed You!';
-        loginForm.classList.add('show');
-        registerForm.classList.remove('show');
+    openLogin.addEventListener('click', () => {
+        showRelatedForm('shift-right', 'shift-left', 'Welcome Back, We Missed You!', loginForm, registerForm);
     });
 
-    $("#loginForm").submit(checkUser);
+    $("#loginForm").submit(loginUser);
 
     $("#registerForm").submit(registerUser);
 
-    // Function to validate and log in the user
-    function checkUser(e)
-    {
-        e.preventDefault();
+   
+    function showRelatedForm(containerRemovedClass, containerAddedClass, textContent, formShown, formHidden) {
+        container.classList.remove(containerRemovedClass);
+        container.classList.add(containerAddedClass);
+        blackCoverText.textContent = textContent;
+        formShown.classList.add('show');
+        formHidden.classList.remove('show');
+        return false;
+    }
 
-        const submitButton = $("#loginForm button[type='submit']");
-        submitButton.prop("disabled", true); // Disable the button
+    function loginUser()
+    {
+        const submitButton = $("#loginButton");
+        submitButton.prop("disabled", true);
 
         const email = $("#loginEmail").val();
         const password = $("#loginPassword").val();
-        const url = "https://localhost:7246/api/Users";
 
-        ajaxCall("GET", url, "", function (res) {
-            const user = res.find(u => u.name === email && u.password === password);
-            if (user) {
-                showNotification(`Login successful. Welcome ${user.name}!`, "success");
-                $("#loginError").text("");
-                window.location.href = "index.html";
-            } else {
-                showNotification("Invalid Email or Password.", "error");
-            }
-            submitButton.prop("disabled", false); // Re-enable the button
-        }, function (err) {
-            console.log(err);
-            showNotification("Error contacting server.", "error");
-            submitButton.prop("disabled", false); // Re-enable the button
-        });
+        const credentials = {
+            email: email,
+            password: password
+        };
+
+        HandleUserAction(credentials, submitButton, "🎉 Login successful! Redirecting to the homepage...", urls.users.login);
 
         return false;
     }
 
     function registerUser()
     {
-        const submitButton = $("#registerForm button[type='submit']");
+        const submitButton = $("#registerButton");
         submitButton.prop("disabled", true);
 
         const id = $("#createId").val();
@@ -86,14 +73,33 @@ function setupListeners() {
             active: true
         };
 
-        ajaxCall("POST", urls.users.register, JSON.stringify(user), function (res) {
-            window.location.replace("index.html");
+        HandleUserAction(user, submitButton, "🎉 Registration successful! Redirecting to the homepage...", urls.users.register, true);
+
+        return false;
+    }
+
+    function HandleUserAction(data, submitButton, notificationText, apiEndpoint, isRegister = false) {
+        ajaxCall("POST", apiEndpoint, JSON.stringify(data), function (res) {
+            showNotification(notificationText, "success");
+            if (isRegister) {
+                saveUser(data)
+            }
+            else {
+                saveUser(res);
+            }
+
+            setTimeout(() => {
+                window.location.replace("index.html");
+            }, 2000);
         }, function (err) {
             const errorMessage = getErrorMessage(err);
             showNotification(errorMessage, "error");
             submitButton.prop("disabled", false);
         });
+    }
 
-        return false;
+    function saveUser(userData) {
+        const user = { name: userData.name, email: userData.email };
+        localStorage.setItem("user", JSON.stringify(user));
     }
 }
