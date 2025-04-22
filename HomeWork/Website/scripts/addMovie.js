@@ -1,6 +1,7 @@
 ﻿$(document).ready(SetupPage);
 
 function SetupPage() {
+    ForceRedirectToHome();
     $("#movieForm").submit(submitWithoutReload);
     $("#budget").on("blur", checkBudget);
     $("#budget").on("input", checkBudget);

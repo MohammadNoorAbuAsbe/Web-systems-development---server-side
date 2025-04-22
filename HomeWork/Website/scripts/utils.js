@@ -40,3 +40,10 @@ function GetLoggedInUser()
     }
     return null;
 }
+
+function ForceRedirectToHome() {
+    const user = GetLoggedInUser();
+    if (!user) {
+        window.location.href = 'login.html';
+    }
+}

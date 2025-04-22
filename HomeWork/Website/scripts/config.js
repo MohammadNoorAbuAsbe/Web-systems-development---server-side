@@ -28,9 +28,7 @@ const MOVIES_ENDPOINTS = {
 const USER_ENDPOINTS = {
     BASE: () => `${USERS_SERVER_PATH}`,
     REGISTER: () => `${USER_ENDPOINTS.BASE()}/register`,
-    LOGIN: () => `${USER_ENDPOINTS.BASE()}/login`,
-    ADD_MOVIE: () => `${USER_ENDPOINTS.BASE()}/addMovie`,
-    MOVIES: () => `${USER_ENDPOINTS.BASE()}/movies`
+    LOGIN: () => `${USER_ENDPOINTS.BASE()}/login`
 };
 
 // URL Constants
@@ -46,8 +44,6 @@ const urls = {
     users: {
         base: USER_ENDPOINTS.BASE(),
         register: USER_ENDPOINTS.REGISTER(),
-        login: USER_ENDPOINTS.LOGIN(),
-        addMovie: USER_ENDPOINTS.ADD_MOVIE(),
-        movies: USER_ENDPOINTS.MOVIES()
+        login: USER_ENDPOINTS.LOGIN()
     },
 };

@@ -3,6 +3,7 @@
 });
 
 function initializePage() {
+    ForceRedirectToHome();
     retriveFromServer();
     setupFilterHandlers();
 }
