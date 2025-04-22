@@ -5,7 +5,6 @@
 function initializePage() {
     retriveFromServer();
     setupFilterHandlers();
-    handleLoggedInWelocme();
 }
 
 function setupFilterHandlers() {

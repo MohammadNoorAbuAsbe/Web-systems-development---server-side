@@ -1,7 +1,6 @@
 ﻿$(document).ready(SetupPage);
 
 function SetupPage() {
-    handleLoggedInWelocme();
     $("#movieForm").submit(submitWithoutReload);
     $("#budget").on("blur", checkBudget);
     $("#budget").on("input", checkBudget);

@@ -12,28 +12,29 @@
     <script src="scripts/addMovie.js"></script>
     <link href="styles/addMovie.css" rel="stylesheet" />
     <link href="styles/notification.css" rel="stylesheet" />
+    <link href="styles/navbar.css" rel="stylesheet" />
     <script src="scripts/navbar.js"></script>
 </head>
 <body>
     <div class="container">
         <div id="notification" class="notification"></div>
         <form id="movieForm">
-            <h2>Insert A new Movie</h2>
+            <h2>Add New Movie</h2>
             <div class="form-group">
                 <label for="url">URL</label>
-                <input type="text" class="form-control" id="url" placeholder="Enter the url of the movie">
+                <input type="text" class="form-control" id="url" placeholder="Movie page URL">
             </div>
             <div class="form-group">
                 <label for="primaryTitle">Title</label>
-                <input type="text" class="form-control" id="primaryTitle" placeholder="Enter the Title name" required>
+                <input type="text" class="form-control" id="primaryTitle" placeholder="Movie title" required>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <input type="text" class="form-control" id="description" placeholder="Enter a small description about the movie">
+                <input type="text" class="form-control" id="description" placeholder="Short movie description">
             </div>
             <div class="form-group">
                 <label for="primaryImage">Image</label>
-                <input type="text" class="form-control" id="primaryImage" placeholder="Enter a link to the movie image" required>
+                <input type="text" class="form-control" id="primaryImage" placeholder="Poster image URL" required>
             </div>
             <div class="form-group">
                 <label for="year">Year</label>
@@ -44,8 +45,8 @@
                 <input type="date" class="form-control" id="releaseDate" placeholder="Enter the release date" required />
             </div>
             <div class="form-group">
-                <label for="language">language</label>
-                <input list="language-choices" id="language" name="language-choice" required />
+                <label for="language">Language</label>
+                <input list="language-choices" id="language" class="form-control" name="language-choice" required />
 
                 <datalist id="language-choices">
                     <option value="English"></option>
@@ -68,16 +69,22 @@
             </div>
 
             <div class="form-group">
-                <label for="budget">Budget</label>
-                <input type="number" class="form-control" id="budget" placeholder="Enter the budget" required />
+                <label for="budget">Budget (USD)</label>
+                <input type="number" class="form-control" id="budget" placeholder="Enter budget in USD" required />
             </div>
             <div class="form-group">
-                <label for="grossWorldwide">grossWorldwide</label>
+                <label for="grossWorldwide">Gross Worldwide Earnings</label>
                 <input type="number" class="form-control" id="grossWorldwide" value = "0"/>
             </div>
             <div class="form-group">
-                <label for="genres">genres</label>
-                <input list="genres-choices" id="genres" name="genres-choice" required multiple />
+                <label for="genres">Genres</label>
+                <input list="genres-choices" id="genres" name="genres-choice"
+                       placeholder="Type genres, separate with commas..."
+                       class="form-control" required multiple>
+                <div class="form-helper">
+                    <span class="example-text">e.g., Action, Comedy, Drama</span>
+                    <span class="multi-hint">↩ Press Enter or comma to add</span>
+                </div>
                 <datalist id="genres-choices">
                     <option value="Drama"></option>
                     <option value="Crime"></option>
@@ -103,23 +110,26 @@
                 </datalist>
             </div>
             <div class="form-group">
-                <label for="isAdult">Is Adult</label>
+                <label for="isAdult">Adult Content</label>
+                <div class="form-helper">
+                    <span class="example-text">(18+ rated content)</span>
+                </div>
                 <input type="checkbox" id="isAdult" />
             </div>
             <div class="form-group">
-                <label for="runtimeMinutes">runtimeMinutes</label>
+                <label for="runtimeMinutes">Runtime (Minutes)</label>
                 <input type="number" class="form-control" id="runtimeMinutes" placeholder="Enter the Runtime in Minutes" required />
             </div>
             <div class="form-group">
-                <label for="averageRating">averageRating</label>
+                <label for="averageRating">Average Rating (0-10)</label>
                 <input type="number" class="form-control" id="averageRating" value="0" />
             </div>
             <div class="form-group">
-                <label for="numVotes">numVotes</label>
+                <label for="numVotes">Number of Votes</label>
                 <input type="number" class="form-control" id="numVotes" value="0" />
             </div>
 
-            <input type="submit" value="Submit BTN" />
+            <input type="submit" value="Save Movie Entry" />
         </form>
     </div>
 

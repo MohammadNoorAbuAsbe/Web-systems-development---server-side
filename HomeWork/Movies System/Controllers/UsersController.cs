@@ -62,10 +62,4 @@ namespace Movies_System.Controllers
         public string Email { get; set; }
         public string Password { get; set; }
     }
-
-    public class AddMovieRequest
-    {
-        public string Email { get; set; }
-        public Movie Movie { get; set; }
-    }
 }

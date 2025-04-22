@@ -3,9 +3,6 @@
 function SetupPage()
 {
     renderMovies();
-    handleLoggedInWelocme();
-    redirectToLogin();
-    handleLogoutBtn();
 }
 
 function renderMovies() {
@@ -56,17 +53,4 @@ function sendToServer(movie) {
             error
         )
     );
-}
-
-function redirectToLogin() {
-    const links = [$('#myMovies'), $('#addMovie')];
-    const user = GetLoggedInUser();
-    if (!user) {
-        links.forEach(link => {
-            link.click(function (event) {
-                event.preventDefault();
-                window.location.href = 'login.html';
-            });
-        });  
-    }
 }
