@@ -5,6 +5,7 @@ function SetupPage()
     renderMovies();
     handleLoggedInWelocme();
     redirectToLogin();
+    handleLogoutBtn();
 }
 
 function renderMovies() {

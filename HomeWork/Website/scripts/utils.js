@@ -50,3 +50,18 @@ function handleLoggedInWelocme() {
         userWelcome.text(`Welcome ${user.name}!`);
     }
 }
+
+function handleLogoutBtn() {
+    const logoutBtn = $('#logoutBtn');
+    const user = GetLoggedInUser();
+    if (user) {
+        logoutBtn.show();
+        logoutBtn.click(() => {
+            localStorage.removeItem("user");
+            window.location.replace("index.html");
+        });
+    } else {
+        logoutBtn.hide();
+    }
+
+}

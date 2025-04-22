@@ -10,49 +10,41 @@
     <script src="scripts/utils.js"></script>
     <script src="scripts/config.js"></script>
     <script src="scripts/addMovie.js"></script>
-    <link href="styles/style.css" rel="stylesheet" />
+    <link href="styles/addMovie.css" rel="stylesheet" />
     <link href="styles/notification.css" rel="stylesheet" />
-
+    <script src="scripts/navbar.js"></script>
 </head>
 <body>
-    <header>
-        <nav id="navbar">
-            <a href="index.html">Home</a>
-            <a href="MyMovies.html" id="myMovies">My Movies</a>
-            <a href="addMovie.html" id="addMovie">Add Movies</a>
-            <h3 id="userWelcome">Welcome</h3>
-        </nav>
-    </header>
     <div class="container">
         <div id="notification" class="notification"></div>
         <form id="movieForm">
             <h2>Insert A new Movie</h2>
             <div class="form-group">
-                <label for="url"><span class="red-star">★ </span>URL</label>
+                <label for="url">URL</label>
                 <input type="text" class="form-control" id="url" placeholder="Enter the url of the movie">
             </div>
             <div class="form-group">
-                <label for="primaryTitle"><span class="red-star">★ </span>Title</label>
+                <label for="primaryTitle">Title</label>
                 <input type="text" class="form-control" id="primaryTitle" placeholder="Enter the Title name" required>
             </div>
             <div class="form-group">
-                <label for="description"><span class="red-star">★ </span>Description</label>
+                <label for="description">Description</label>
                 <input type="text" class="form-control" id="description" placeholder="Enter a small description about the movie">
             </div>
             <div class="form-group">
-                <label for="primaryImage"><span class="red-star">★ </span>Image</label>
+                <label for="primaryImage">Image</label>
                 <input type="text" class="form-control" id="primaryImage" placeholder="Enter a link to the movie image" required>
             </div>
             <div class="form-group">
-                <label for="year"><span class="red-star">★ </span>Year</label>
+                <label for="year">Year</label>
                 <input type="number" class="form-control" id="year" placeholder="Enter the year" required />
             </div>
             <div class="form-group">
-                <label for="releaseDate"><span class="red-star">★ </span>Release Date</label>
+                <label for="releaseDate">Release Date</label>
                 <input type="date" class="form-control" id="releaseDate" placeholder="Enter the release date" required />
             </div>
             <div class="form-group">
-                <label for="language"><span class="red-star">★ </span>language</label>
+                <label for="language">language</label>
                 <input list="language-choices" id="language" name="language-choice" required />
 
                 <datalist id="language-choices">
@@ -76,15 +68,15 @@
             </div>
 
             <div class="form-group">
-                <label for="budget"><span class="red-star">★ </span>Budget</label>
+                <label for="budget">Budget</label>
                 <input type="number" class="form-control" id="budget" placeholder="Enter the budget" required />
             </div>
             <div class="form-group">
-                <label for="grossWorldwide"><span class="red-star">★ </span>grossWorldwide</label>
+                <label for="grossWorldwide">grossWorldwide</label>
                 <input type="number" class="form-control" id="grossWorldwide" value = "0"/>
             </div>
             <div class="form-group">
-                <label for="genres"><span class="red-star">★ </span>genres</label>
+                <label for="genres">genres</label>
                 <input list="genres-choices" id="genres" name="genres-choice" required multiple />
                 <datalist id="genres-choices">
                     <option value="Drama"></option>
@@ -115,15 +107,15 @@
                 <input type="checkbox" id="isAdult" />
             </div>
             <div class="form-group">
-                <label for="runtimeMinutes"><span class="red-star">★ </span>runtimeMinutes</label>
+                <label for="runtimeMinutes">runtimeMinutes</label>
                 <input type="number" class="form-control" id="runtimeMinutes" placeholder="Enter the Runtime in Minutes" required />
             </div>
             <div class="form-group">
-                <label for="averageRating"><span class="red-star">★ </span>averageRating</label>
+                <label for="averageRating">averageRating</label>
                 <input type="number" class="form-control" id="averageRating" value="0" />
             </div>
             <div class="form-group">
-                <label for="numVotes"><span class="red-star">★ </span>numVotes</label>
+                <label for="numVotes">numVotes</label>
                 <input type="number" class="form-control" id="numVotes" value="0" />
             </div>
 
