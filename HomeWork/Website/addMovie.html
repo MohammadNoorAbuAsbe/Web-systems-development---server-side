@@ -1,198 +1,136 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link href="styles/style.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-            crossorigin="anonymous"></script>
+    <title>Add Movies</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="scripts/ajaxCalls.js"></script>
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/addMovie.js"></script>
+    <link href="styles/style.css" rel="stylesheet" />
+    <link href="styles/notification.css" rel="stylesheet" />
 
-    <script>$(document).ready(function () {
-            $("#movieForm").submit(addNewMovie)
-        })
-
-        function addNewMovie(e) {
-            e.preventDefault();
-            $(".error").text("");
-
-            const url = $("input[name='url']").val();
-            const primaryTitle = $("input[name='primaryTitle']").val();
-            const description = $("input[name='description']").val();
-            const primaryImage = $("input[name='primaryImage']").val();
-            const year = $("input[name='year']").val();
-            const releaseDate = $("input[name='releaseDate']").val();
-            const language = $("input[name='language']").val();
-            const budget = $("input[name='budget']").val();
-            const grossWorldwide = $("input[name='grossWorldwide']").val();
-            const genres = $("input[name='genres']").val();
-            const isAdult = $("input[name='isAdult']").is(":checked");
-            const runtimeMinutes = $("input[name='runtimeMinutes']").val();
-            const averageRating = $("input[name='averageRating']").val();
-            const numVotes = $("input[name='numVotes']").val();
-
-
-
-            let valid = true;
-            if (!primaryTitle) {
-                $("input[name='primaryTitle']").next(".error").text("Primary Title is required.");
-                valid = false;
-            }
-            if (!primaryImage) {
-                $("input[name='primaryImage']").next(".error").text("Primary Image is required.");
-                valid = false;
-            }
-            if (!releaseDate) {
-                $("input[name='releaseDate']").next(".error").text("release Date is required.");
-                valid = false;
-            }
-            if (!year) {
-                $("input[name='year']").next(".error").text("year is required.");
-                valid = false;
-            }
-            if (!language) {
-                $("input[name='language']").next(".error").text("language is required.");
-                valid = false;
-            }
-            if (!runtimeMinutes) {
-                $("input[name='runtimeMinutes']").next(".error").text("runtimeMinutes is required.");
-                valid = false;
-            }
-            if (budget < 100000) {
-                $("input[name='budget']").next(".error").text("budget must be at least 100,000.");
-                valid = false;
-            }
-            if (!valid) return;
-
-            const movie = {
-                url: url,
-                primaryTitle: primaryTitle,
-                description: description,
-                primaryImage: primaryImage,
-                year: year,
-                releaseDate: releaseDate,
-                language: language,
-                budget: budget,
-                grossWorldwide: grossWorldwide,
-                genres: genres,
-                isAdult: isAdult,
-                runtimeMinutes: runtimeMinutes,
-                averageRating: averageRating,
-                numVotes: numVotes
-            };
-
-            const serverUrl = "https://localhost:7246/api/Users";
-            ajaxCall("POST", serverUrl, JSON.stringify(movie), function (res) {
-                alert("Movie added successfully!");
-                $("#movieForm")[0].reset();
-            }, function (err) {
-                console.log(err);
-                alert("Failed to add movie.");
-            });
-
-
-        }</script>
 </head>
 <body>
-    <div class="add-movie-container">
+    <header>
+        <nav id="navbar">
+            <a href="index.html">Home</a>
+            <a href="MyMovies.html" id="myMovies">My Movies</a>
+            <a href="addMovie.html" id="addMovie">Add Movies</a>
+            <h3 id="userWelcome">Welcome</h3>
+        </nav>
+    </header>
+    <div class="container">
+        <div id="notification" class="notification"></div>
         <form id="movieForm">
-            <h2>Add a New Movie 🎬</h2>
+            <h2>Insert A new Movie</h2>
+            <div class="form-group">
+                <label for="url"><span class="red-star">★ </span>URL</label>
+                <input type="text" class="form-control" id="url" placeholder="Enter the url of the movie">
+            </div>
+            <div class="form-group">
+                <label for="primaryTitle"><span class="red-star">★ </span>Title</label>
+                <input type="text" class="form-control" id="primaryTitle" placeholder="Enter the Title name" required>
+            </div>
+            <div class="form-group">
+                <label for="description"><span class="red-star">★ </span>Description</label>
+                <input type="text" class="form-control" id="description" placeholder="Enter a small description about the movie">
+            </div>
+            <div class="form-group">
+                <label for="primaryImage"><span class="red-star">★ </span>Image</label>
+                <input type="text" class="form-control" id="primaryImage" placeholder="Enter a link to the movie image" required>
+            </div>
+            <div class="form-group">
+                <label for="year"><span class="red-star">★ </span>Year</label>
+                <input type="number" class="form-control" id="year" placeholder="Enter the year" required />
+            </div>
+            <div class="form-group">
+                <label for="releaseDate"><span class="red-star">★ </span>Release Date</label>
+                <input type="date" class="form-control" id="releaseDate" placeholder="Enter the release date" required />
+            </div>
+            <div class="form-group">
+                <label for="language"><span class="red-star">★ </span>language</label>
+                <input list="language-choices" id="language" name="language-choice" required />
 
-            <label>
-                Url:
-                <input type="text" name="url">
-            </label>
-
-            <label>
-                Primary Title:
-                <input type="text" name="primaryTitle" required>
-                <span class="error"></span>
-            </label>
-
-            <label>
-                Description:
-                <textarea name="description"></textarea>
-            </label>
-
-            <label>
-                Primary Image:
-                <input type="url" name="primaryImage" required>
-                <span class="error"></span>
-            </label>
-
-            <label>
-                Year:
-                <input type="number" name="year" required>
-                <span class="error"></span>
-            </label>
-
-            <label>
-                Release Date:
-                <input type="date" name="releaseDate" required>
-                <span class="error"></span>
-            </label>
-
-            <label>
-                Language:
-                <input list="languages" name="language" required>
-                <datalist id="languages">
-                    <option value="English">
-                    <option value="Hebrew">
-                    <option value="Spanish">
-                    <option value="French">
-                    <option value="German">
+                <datalist id="language-choices">
+                    <option value="English"></option>
+                    <option value="Italian"></option>
+                    <option value="Japanese"></option>
+                    <option value="Portuguese"></option>
+                    <option value="Korean"></option>
+                    <option value="French"></option>
+                    <option value="German"></option>
+                    <option value="Hindi"></option>
+                    <option value="Arabic"></option>
+                    <option value="Belarusian"></option>
+                    <option value="Danish"></option>
+                    <option value="Persian"></option>
+                    <option value="Spanish"></option>
+                    <option value="Tamil"></option>
+                    <option value="Swedish"></option>
+                    <option value="Turkish"></option>
                 </datalist>
-                <span class="error"></span>
-            </label>
+            </div>
 
-            <label>
-                Budget:
-                <input type="number" name="budget" min="100000">
-                <span class="error"></span>
-            </label>
-
-            <label>
-                Gross Worldwide:
-                <input type="number" name="grossWorldwide" value="0">
-            </label>
-
-            <label>
-                Genres (comma-separated):
-                <input type="text" name="genres" id="genresInput" list="genresList" placeholder="e.g. Action,Drama">
-                <datalist id="genresList">
-                    <option value="Action">
-                    <option value="Drama">
-                    <option value="Comedy">
-                    <option value="Horror">
-                    <option value="Science Fiction">
-                    <option value="Romance">
+            <div class="form-group">
+                <label for="budget"><span class="red-star">★ </span>Budget</label>
+                <input type="number" class="form-control" id="budget" placeholder="Enter the budget" required />
+            </div>
+            <div class="form-group">
+                <label for="grossWorldwide"><span class="red-star">★ </span>grossWorldwide</label>
+                <input type="number" class="form-control" id="grossWorldwide" value = "0"/>
+            </div>
+            <div class="form-group">
+                <label for="genres"><span class="red-star">★ </span>genres</label>
+                <input list="genres-choices" id="genres" name="genres-choice" required multiple />
+                <datalist id="genres-choices">
+                    <option value="Drama"></option>
+                    <option value="Crime"></option>
+                    <option value="Action"></option>
+                    <option value="Adventure"></option>
+                    <option value="Fantasy"></option>
+                    <option value="Biography"></option>
+                    <option value="History"></option>
+                    <option value="Western"></option>
+                    <option value="Romance"></option>
+                    <option value="Sci-Fi"></option>
+                    <option value="Mystery"></option>
+                    <option value="Family"></option>
+                    <option value="Thriller"></option>
+                    <option value="War"></option>
+                    <option value="Comedy"></option>
+                    <option value="Animation"></option>
+                    <option value="Music"></option>
+                    <option value="Horror"></option>
+                    <option value="Film-Noir"></option>
+                    <option value="Musical"></option>
+                    <option value="Sport"></option>
                 </datalist>
-            </label>
+            </div>
+            <div class="form-group">
+                <label for="isAdult">Is Adult</label>
+                <input type="checkbox" id="isAdult" />
+            </div>
+            <div class="form-group">
+                <label for="runtimeMinutes"><span class="red-star">★ </span>runtimeMinutes</label>
+                <input type="number" class="form-control" id="runtimeMinutes" placeholder="Enter the Runtime in Minutes" required />
+            </div>
+            <div class="form-group">
+                <label for="averageRating"><span class="red-star">★ </span>averageRating</label>
+                <input type="number" class="form-control" id="averageRating" value="0" />
+            </div>
+            <div class="form-group">
+                <label for="numVotes"><span class="red-star">★ </span>numVotes</label>
+                <input type="number" class="form-control" id="numVotes" value="0" />
+            </div>
 
-            <label>
-                Is Adult:
-                <input type="checkbox" name="isAdult">
-            </label>
-
-            <label>
-                Runtime Minutes:
-                <input type="number" name="runtimeMinutes" required>
-                <span class="error"></span>
-            </label>
-
-            <label>
-                Average Rating:
-                <input type="number" name="averageRating" value="0">
-            </label>
-
-            <label>
-                Number of Votes:
-                <input type="number" name="numVotes" value="0">
-            </label>
-
-            <button type="submit">➕ Add Movie</button>
+            <input type="submit" value="Submit BTN" />
         </form>
     </div>
+
+
 </body>
 </html>

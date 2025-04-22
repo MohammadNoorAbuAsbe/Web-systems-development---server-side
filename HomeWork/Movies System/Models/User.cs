@@ -45,7 +45,6 @@
         {
             return usersList.FirstOrDefault(u => u.Email == email);
         }
-
         #endregion
 
         #region Authentication Methods

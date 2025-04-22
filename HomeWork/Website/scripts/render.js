@@ -4,7 +4,7 @@
     container,
     movies
 ) {
-    const user = GetLogedInUser();
+    const user = GetLoggedInUser();
     // Use a document fragment to improve performance by minimizing DOM reflows
     const fragment = document.createDocumentFragment();
 

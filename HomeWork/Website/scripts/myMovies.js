@@ -5,7 +5,9 @@
 function initializePage() {
     retriveFromServer();
     setupFilterHandlers();
+    handleLoggedInWelocme();
 }
+
 function setupFilterHandlers() {
     const filterTitleInput = $('#filterTitle');
     const filterTitleBtn = $('#filterTitleBtn');
@@ -24,7 +26,7 @@ function setupFilterHandlers() {
         filterDateBtn.prop('disabled', startDateInput.val() === '' || endDateInput.val() === '');
     });
 
-    filterTitleBtn.click(() => filterMoviesByTitle(filterTitleInput.val()));
+    filterTitleBtn.click(() => { console.log(filterTitleInput.val()); filterMoviesByTitle(filterTitleInput.val()) });
     filterDateBtn.click(() => filterMoviesByDate(startDateInput.val(), endDateInput.val()));
     $('#clearFilterBtn').click(clearFilter);
 }
@@ -80,14 +82,15 @@ function deleteMovie(movieId) {
 }
 
 function filterMoviesByTitle(title) {
-    ajaxCall('GET', `${urls.movies.filterByTitle}?title = ${ title }`, "", function (movies) {
+    console.log(title);
+    ajaxCall('GET', `${urls.movies.filterByTitle}?title=${title}`, "", function (movies) {
         renderMovies(movies);
         setActiveFilter(`🔍 Filter applied: Movies with the title "${title}"`);
     }, handleError);
 }
 
 function filterMoviesByDate(startDate, endDate) {
-    ajaxCall('GET', `${urls.movies.filterByDate}?startDate = ${ startDate }& endDate=${ endDate }`, "", function (movies) {
+    ajaxCall('GET', `${urls.movies.filterByDate}?startDate=${startDate}&endDate=${endDate}`, "", function (movies) {
         renderMovies(movies);
         setActiveFilter(`📅 Filter applied: Movies released between ${formatDate(startDate)} and ${formatDate(endDate)}`);
     }, handleError);

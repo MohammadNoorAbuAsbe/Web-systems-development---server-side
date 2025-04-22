@@ -35,9 +35,21 @@ namespace Movies_System.Controllers
         #region POST Methods
         // POST api/<MoviesController>
         [HttpPost("addToCart")]
-        public bool Post([FromBody] Movie movie)
+        public IActionResult Post([FromBody] Movie movie)
         {
-            return Movie.Insert(movie);
+            if (Movie.Insert(movie))
+            {
+                return Ok(new
+                {
+                    Message = "Movie added successfully",
+                    Success = true
+                });
+            }
+            return BadRequest(new
+            {
+                Message = "Movie already exists",
+                Success = false
+            });
         }
         #endregion
 

@@ -32,11 +32,21 @@ const getErrorMessage = (error) => {
     return 'Oops! Something went wrong while processing your request.';
 };
 
-function GetLogedInUser()
+function GetLoggedInUser()
 {
     const user = localStorage.getItem("user");
     if (user) {
         return JSON.parse(user);
     }
     return null;
+}
+
+function handleLoggedInWelocme() {
+    const user = GetLoggedInUser();
+    const navbar = $('#navbar');
+    const userWelcome = $('#userWelcome');
+    if (user) {
+        navbar.removeClass('guest');
+        userWelcome.text(`Welcome ${user.name}!`);
+    }
 }

@@ -3,7 +3,7 @@
 function SetupPage()
 {
     renderMovies();
-    handleLogedInWelocme();
+    handleLoggedInWelocme();
     redirectToLogin();
 }
 
@@ -57,23 +57,15 @@ function sendToServer(movie) {
     );
 }
 
-function handleLogedInWelocme() {
-    const user = GetLogedInUser();
-    const navbar = $('#navbar');
-    const userWelcome = $('#userWelcome');
-    if (user) {
-        navbar.removeClass('guest');
-        userWelcome.text(`Welcome ${user.name}!`);
-    }
-}
-
 function redirectToLogin() {
-    const link = $('#myMovies');
-    const user = GetLogedInUser();
+    const links = [$('#myMovies'), $('#addMovie')];
+    const user = GetLoggedInUser();
     if (!user) {
-        link.click(function (event) {
-            event.preventDefault();
-            window.location.href = 'login.html';
-        });
+        links.forEach(link => {
+            link.click(function (event) {
+                event.preventDefault();
+                window.location.href = 'login.html';
+            });
+        });  
     }
 }
