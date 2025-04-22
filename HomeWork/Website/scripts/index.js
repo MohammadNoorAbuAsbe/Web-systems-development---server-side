@@ -3,6 +3,7 @@
 function SetupPage()
 {
     renderMovies();
+    document.body.style.setProperty('--background-image', 'none');
 }
 
 function renderMovies() {

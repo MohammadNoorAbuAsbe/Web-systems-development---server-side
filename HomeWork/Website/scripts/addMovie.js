@@ -5,6 +5,26 @@ function SetupPage() {
     $("#movieForm").submit(submitWithoutReload);
     $("#budget").on("blur", checkBudget);
     $("#budget").on("input", checkBudget);
+    $("#averageRating").on("input", validateRating);
+}
+
+
+function validateRating() {
+    const rating = parseFloat(this.value);
+    if (rating < 0 || rating > 10) {
+        this.setCustomValidity('Rating must be between 0.0 and 10.0');
+    } else {
+        this.setCustomValidity('');
+    }
+    this.reportValidity();
+}
+
+
+let averageRating = 0;
+if ($("#averageRating").val()) {
+    averageRating = parseFloat($("#averageRating").val());
+    averageRating = Math.min(10, Math.max(0, averageRating));
+    averageRating = parseFloat(averageRating.toFixed(1));
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -129,6 +149,13 @@ function error(err) {
 }
 
 function submitWithoutReload() {
-    AddMovie();
+    let text = $("#genres").val();
+    let pattern = /^(?!.*,,)(?!^,)(?!.*,$)[a-zA-Z-]+(?:,[a-zA-Z-]+)*$/;
+    let result = pattern.test(text);
+    if (result)
+    {
+        AddMovie()
+    }
     return false;
 }
+

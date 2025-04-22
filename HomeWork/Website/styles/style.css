@@ -10,7 +10,7 @@
     .filters .filter-label {
         font-size: 14px;
         font-weight: bold;
-        color: #333;
+        color: white;
         margin-right: 5px;
     }
 
@@ -92,20 +92,22 @@
 }
 
 .detail-label {
-    color: #6a7cff;
-    font-weight: 600;
-    text-align: left; 
+    text-align: left;
     white-space: nowrap;
     padding-right: 10px;
     min-width: 80px;
+    color: #4a9eff;
+    font-weight: 500;
+    font-size: 0.9rem;
 }
 
 .detail-value {
-    color: #ddd;
     text-align: right;
     word-break: break-word;
     padding-left: 10px;
     justify-self: end;
+    color: #e0e0e0;
+    font-size: 0.95rem;
 }
 
 .secondary-info {
@@ -117,11 +119,15 @@
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 20px;
-    background: rgba(26, 26, 26, 0.95);
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
 
 .movie-description {
@@ -148,18 +154,21 @@
 }
 
 .movie-card {
-    background-color: #1a1a1a;
-    padding: 20px;
-    width: 350px;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 15px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    width: 320px;
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
     overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
 }
 
 .movie-card:hover .secondary-info {
@@ -178,6 +187,13 @@
 .btn {
     position: relative;
     z-index: 2;
+    background: linear-gradient(135deg, rgba(74, 158, 255, 0.9), rgba(45, 109, 255, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 12px 28px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s ease;
 }
 
 body {
@@ -195,7 +211,7 @@ body {
 
 #title {
     font-size: 2em;
-    color: #333;
+    color: white;
     font-weight: bold;
     margin-bottom: 30px;
     text-align: center;
@@ -229,32 +245,37 @@ body {
     flex-wrap: wrap;
 }
 
-    .movie-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
+.movie-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    border-color: rgba(74, 158, 255, 0.3);
+}
 
-    .movie-card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 10px;
-        transition: transform 0.3s ease;
-    }
+.movie-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
         .movie-card img:hover {
             transform: scale(1.05);
         }
 
-    .movie-card h3 {
-        font-size: 20px;
-        color: #f0f0f0;
-        margin-top: 15px;
-        height: 50px;
-        overflow: hidden;
-        font-weight: bold;
-        text-transform: capitalize;
-    }
+.movie-card h3 {
+    height: 70px;
+    overflow: hidden;
+    text-transform: capitalize;
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 0 0 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
 
     .movie-card p {
         font-size: 14px;
@@ -324,22 +345,23 @@ body {
 }
 
 .genre-chip {
-    background: linear-gradient(135deg, #4b6cb7, #182848);
-    color: #fff;
-    padding: 6px 14px;
-    border-radius: 20px;
     font-size: 14px;
-    font-weight: 500;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transition: transform 0.2s ease, background 0.3s ease;
     cursor: default;
+    background: rgba(74, 158, 255, 0.15);
+    border: 1px solid rgba(74, 158, 255, 0.3);
+    color: #4a9eff;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
 }
 
     .genre-chip:hover {
-        transform: scale(1.05);
         background: linear-gradient(135deg, #667eea, #764ba2);
+        background: rgba(74, 158, 255, 0.25);
+        transform: translateY(-2px);
     }
-
 
 .vote-badge {
     display: inline-block;
@@ -369,10 +391,7 @@ button:disabled {
 }
 
 .votes-badge {
-    background: linear-gradient(to right, #ffd700, #ffa500);
-    color: #fff;
     font-weight: bold;
-    padding: 8px 16px;
     border-radius: 30px;
     font-size: 14px;
     display: inline-block;
@@ -380,6 +399,11 @@ button:disabled {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
     align-self: center;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: #ffd700;
+    padding: 8px 16px;
+    backdrop-filter: blur(4px);
 }
 
     .votes-badge:hover {
@@ -390,11 +414,76 @@ button:disabled {
     position: absolute;
     top: 15px;
     left: 15px;
-    background-color: #28a745;
-    color: white;
-    font-weight: bold;
-    padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
     box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    background: rgb(24, 71, 34, 0.5);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #00ff3a;
+    font-weight: 500;
+    padding: 6px 14px;
+    backdrop-filter: blur(4px);
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-image: var(--background-image, linear-gradient(135deg, #0a0a0a 0%, #182848 100%));
+    filter: blur(8px) brightness(0.6);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 1s ease-in-out, background-image 1s ease-in-out;
+}
+
+body.background-active::after {
+    opacity: 1;
+}
+
+    .movie-card:hover img {
+        transform: scale(1.03);
+    }
+
+    .btn:hover {
+        background: linear-gradient(135deg, rgba(74, 158, 255, 1), rgba(45, 109, 255, 1));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+    }
+
+.movie-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(74, 158, 255, 0.05), transparent);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.movie-description::-webkit-scrollbar {
+    width: 6px;
+}
+
+.movie-description::-webkit-scrollbar-thumb {
+    background: rgba(74, 158, 255, 0.4);
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .movie-card {
+        width: 100%;
+        max-width: 280px;
+        padding: 15px;
+    }
+
+        .movie-card h3 {
+            font-size: 1.2rem;
+        }
 }

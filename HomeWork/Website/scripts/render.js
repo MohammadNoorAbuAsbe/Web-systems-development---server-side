@@ -1,4 +1,44 @@
-﻿function renderMovieCards(
+﻿let backgroundTimeout;
+let backgroundInterval;
+let currentMovies = [];
+const FALLBACK_BACKGROUND = "linear-gradient(135deg, #0a0a0a 0%, #182848 100%)";
+const INVALID_IMAGES = new Set();
+
+function setBackgroundImage(url) {
+    if (!url || INVALID_IMAGES.has(url)) {
+        $('body').css('--background-image', FALLBACK_BACKGROUND);
+        $('body').addClass('background-active');
+        return;
+    }
+
+    const testImage = new Image();
+    testImage.onload = () => {
+        $('body').css('--background-image', `url(${url})`);
+        $('body').addClass('background-active');
+    };
+    testImage.onerror = () => {
+        INVALID_IMAGES.add(url);
+        $('body').css('--background-image', FALLBACK_BACKGROUND);
+        $('body').addClass('background-active');
+    };
+    testImage.src = url;
+}
+
+
+function startBackgroundRotation(movies) {
+    currentMovies = movies;
+    clearInterval(backgroundInterval);
+
+    const initialMovie = movies[Math.floor(Math.random() * movies.length)];
+    setBackgroundImage(initialMovie.primaryImage);
+
+    backgroundInterval = setInterval(() => {
+        const randomMovie = currentMovies[Math.floor(Math.random() * currentMovies.length)];
+        setBackgroundImage(randomMovie.primaryImage);
+    }, 8000);
+}
+
+function renderMovieCards(
     buttonText,
     onButtonClick,
     container,
@@ -56,6 +96,20 @@
         fragment.appendChild(movieCard[0]);
     });
 
-    // Append all movie cards to the container in one operation for better performance
     $(container).append(fragment);
+    $('.movie-card').hover(
+        function () {
+            clearTimeout(backgroundTimeout);
+            clearInterval(backgroundInterval);
+            const movieImage = $(this).find('img').attr('src');
+            setBackgroundImage(movieImage);
+        },
+        function () {
+            backgroundTimeout = setTimeout(() => {
+                startBackgroundRotation(currentMovies);
+            }, 1000);
+        }
+    );
+
+    startBackgroundRotation(movies);
 }

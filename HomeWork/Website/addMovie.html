@@ -80,7 +80,7 @@
                 <label for="genres">Genres</label>
                 <input list="genres-choices" id="genres" name="genres-choice"
                        placeholder="Type genres, separate with commas..."
-                       class="form-control" required multiple>
+                       class="form-control" required multiple/>
                 <div class="form-helper">
                     <span class="example-text">e.g., Action, Comedy, Drama</span>
                     <span class="multi-hint">Press comma to add</span>
@@ -122,7 +122,7 @@
             </div>
             <div class="form-group">
                 <label for="averageRating">Average Rating (0-10)</label>
-                <input type="number" class="form-control" id="averageRating" value="0" />
+                <input type="number" class="form-control" id="averageRating" step="0.1" min="0" max="10" value="0.0" pattern="^\d+(\.\d{1})?$"/>
             </div>
             <div class="form-group">
                 <label for="numVotes">Number of Votes</label>
