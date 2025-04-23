@@ -62,6 +62,7 @@
                 }
 
                 user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
+                user.Id = usersList.Count > 0 ? usersList.Max(u => u.Id) + 1 : 1;
                 usersList.Add(user);
                 return true;
             }

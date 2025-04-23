@@ -60,13 +60,12 @@ function setupListeners() {
         const submitButton = $("#registerButton");
         submitButton.prop("disabled", true);
 
-        const id = $("#createId").val();
         const name = $("#createName").val();
         const email = $("#createEmail").val();
         const password = $("#createPassword").val();
 
         const user = {
-            id: id,
+            id: 0,
             name: name,
             email: email,
             password: password,
