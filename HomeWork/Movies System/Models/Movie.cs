@@ -6,16 +6,16 @@
         static List<Movie> moviesList = new List<Movie>();
 
         int id;
-        string url;
-        string primaryTitle;
-        string description;
-        string primaryImage;
+        string url = string.Empty;
+        string primaryTitle = string.Empty;
+        string description = string.Empty;
+        string primaryImage = string.Empty;
         int year;
         DateTime releaseDate;
-        string language;
+        string language = string.Empty;
         double budget;
         double grossWorldwide;
-        string genres;
+        string genres = string.Empty;
         bool isAdult;
         int runtimeMinutes;
         float averageRating;
@@ -69,8 +69,9 @@
         public static bool Insert(Movie movie)
         {
             bool result = false;
-            if (!moviesList.Any(m => m.Id == movie.Id || m.PrimaryTitle == movie.PrimaryTitle))
+            if (!moviesList.Any(m => m.PrimaryTitle == movie.PrimaryTitle))
             {
+                movie.Id = moviesList.Count > 0 ? moviesList.Max(m => m.Id) + 1 : 1;
                 moviesList.Add(movie);
                 result = true;
             }
@@ -86,12 +87,26 @@
 
         public static List<Movie> GetByTitle(string title) 
         {
-            return moviesList.Where(m => m.PrimaryTitle.Contains(title)).ToList();
+            return moviesList.Where(m => m.PrimaryTitle.ToLower().Contains(title.ToLower())).ToList();
         }
 
         public static List<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
             return moviesList.Where(m => m.ReleaseDate >= startDate && m.ReleaseDate <= endDate).ToList();
+        }
+        #endregion
+
+        #region DELETE Methods
+        public static bool RemoveFromList(int id)
+        {
+            bool result = false;
+            Movie? movieToRemove = moviesList.FirstOrDefault(m => m.Id == id);
+            if (movieToRemove != null)
+            {
+                moviesList.Remove(movieToRemove);
+                result = true;
+            }
+            return result;
         }
         #endregion
     }

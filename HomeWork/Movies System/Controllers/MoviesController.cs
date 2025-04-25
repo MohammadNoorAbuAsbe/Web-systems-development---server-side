@@ -11,21 +11,21 @@ namespace Movies_System.Controllers
     {
         #region GET Methods
         // GET: api/<MoviesController>
-        [HttpGet]
+        [HttpGet("cart")]
         public IEnumerable<Movie> Get()
         {
             return Movie.Read();
         }
 
 
-        [HttpGet("GetByTitle")]
+        [HttpGet("getByTitle")]
         public IEnumerable<Movie> GetByTitle(string title)
         {
             return Movie.GetByTitle(title);
         }
 
 
-        [HttpGet("from/{startDate}/until/{endDate}")]
+        [HttpGet("filterByDate")]
         public IEnumerable<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
             return Movie.GetByReleaseDate(startDate, endDate);
@@ -34,10 +34,31 @@ namespace Movies_System.Controllers
 
         #region POST Methods
         // POST api/<MoviesController>
-        [HttpPost]
-        public bool Post([FromBody] Movie movie)
+        [HttpPost("addToCart")]
+        public IActionResult Post([FromBody] Movie movie)
         {
-            return Movie.Insert(movie);
+            if (Movie.Insert(movie))
+            {
+                return Ok(new
+                {
+                    Message = "Movie added successfully",
+                    Success = true
+                });
+            }
+            return BadRequest(new
+            {
+                Message = "Movie already exists",
+                Success = false
+            });
+        }
+        #endregion
+
+        #region Delete Methods
+        // DELETE api/<MoviesController>/5
+        [HttpDelete("{id}")]
+        public bool Delete(int id)
+        {
+            return Movie.RemoveFromList(id);
         }
         #endregion
     }
