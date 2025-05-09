@@ -11,21 +11,21 @@ namespace Movies_System.Controllers
     {
         #region GET Methods
         // GET: api/<MoviesController>
-        [HttpGet]
+        [HttpGet("cart")]
         public IEnumerable<Movie> Get()
         {
             return Movie.Read();
         }
 
 
-        [HttpGet("GetByTitle")]
+        [HttpGet("getByTitle")]
         public IEnumerable<Movie> GetByTitle(string title)
         {
             return Movie.GetByTitle(title);
         }
 
 
-        [HttpGet("from/{startDate}/until/{endDate}")]
+        [HttpGet("filterByDate")]
         public IEnumerable<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
             return Movie.GetByReleaseDate(startDate, endDate);
@@ -34,20 +34,61 @@ namespace Movies_System.Controllers
 
         #region POST Methods
         // POST api/<MoviesController>
-        [HttpPost]
-        public bool Post([FromBody] Movie movie)
+        [HttpPost("addToCart")]
+        public IActionResult Post([FromBody] Movie movie)
         {
-            return Movie.Insert(movie);
+            try
+            {
+                if (Movie.Insert(movie))
+                {
+                    return Ok(new
+                    {
+                        Message = "Movie added successfully",
+                        Success = true
+                    });
+                }
+                return BadRequest(new
+                {
+                    Message = "Movie already exists",
+                    Success = false
+                });
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(new
+                {
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
         }
         #endregion
 
-        #region DELETE Methods
-        [HttpDelete]
-        public bool DeleteMovie(int id)
+        #region Delete Methods
+        // DELETE api/<MoviesController>/5
+        [HttpDelete("{id}")]
+         public bool Delete(int id)
         {
-            return Movie.DeleteById(id);
+            return Models.Movie.DeleteMovieById(id);
         }
         #endregion
 
+        #region PUT Methods
+        // UPDATE api/<MoviesController>/5
+        [HttpPut("Update/{id}")]
+        public bool Put(int id, Movie movie)
+        {
+            return Models.Movie.UpdateMovie(id, movie);
+        }
+        #endregion
+
+        #region One Time Use (Unneeded now)
+        [HttpPost("insertMoviesFromJson")]
+        public int InsertJsonToDataBase([FromBody] List<Movie> movies)
+        {
+            DBservices dBservices = new DBservices();
+            return dBservices.InsertBatch(movies);
+        }
+        #endregion
     }
 }

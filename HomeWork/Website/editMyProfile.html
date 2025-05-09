@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Login & Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="styles/login - Copy.css" rel="stylesheet" />
+    <link href="styles/notification.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/ajaxCalls.js"></script>
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/updateMyProfile.js"></script>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div> <!-- Notification container -->
+
+    <div class="container" id="container">
+        <div id="notification" class="notification"></div>
+
+        <div class="login-container">
+            <form id="loginForm" class="show">
+
+                <h2>Update Your Profile </h2>
+                <p class="subtext">Update your name/email/password</p>
+                <label>Name: <input type="text" id="createName" required pattern="^[A-Za-z]{2,}$" title="Name must be at least 2 letters and contain only letters."></label>
+                <label>Email: <input type="text" id="loginEmail" required></label>
+                <label>Your Password: <input type="password" id="loginPassword" required></label>
+                <button type="button" id="updatePassword">Update Password</button>
+                <label id="newPassword">Your New Password: <input type="password" required></label>
+                <button type="submit" id="updateButton">Update</button>
+                <button type="button" class="continue-as-guest secondary-button">Back</button>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>

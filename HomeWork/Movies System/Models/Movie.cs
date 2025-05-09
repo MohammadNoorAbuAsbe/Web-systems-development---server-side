@@ -6,20 +6,21 @@
         static List<Movie> moviesList = new List<Movie>();
 
         int id;
-        string url;
-        string primaryTitle;
-        string description;
-        string primaryImage;
+        string url = string.Empty;
+        string primaryTitle = string.Empty;
+        string description = string.Empty;
+        string primaryImage = string.Empty;
         int year;
         DateTime releaseDate;
-        string language;
-        double budget;
-        double grossWorldwide;
-        string genres;
+        string language = string.Empty;          // Value N/A indicates not provided
+        double budget;                           // Value -1 indicates not provided
+        double grossWorldwide;                   // Value -1 indicates not provided
+        string genres = string.Empty;
         bool isAdult;
         int runtimeMinutes;
         float averageRating;
         int numVotes;
+        DateTime? deletedAt;
 
         #endregion
 
@@ -63,18 +64,25 @@
         public int RuntimeMinutes { get => runtimeMinutes; set => runtimeMinutes = value; }
         public float AverageRating { get => averageRating; set => averageRating = value; }
         public int NumVotes { get => numVotes; set => numVotes = value; }
+        public DateTime? DeletedAt { get => deletedAt; set => deletedAt = value; }
         #endregion
 
         #region POST Methods
         public static bool Insert(Movie movie)
         {
-            bool result = false;
-            if (!moviesList.Any(m => m.Id == movie.Id || m.PrimaryTitle == movie.PrimaryTitle))
+            try
             {
-                moviesList.Add(movie);
-                result = true;
+                DBservices dBservices = new DBservices();
+                if (dBservices.AddMovie(movie) == 0)
+                {
+                    return false;
+                }
+                return true;
             }
-            return result;
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
         #endregion
 
@@ -84,9 +92,9 @@
             return moviesList;
         }
 
-        public static List<Movie> GetByTitle(string title) 
+        public static List<Movie> GetByTitle(string title)
         {
-            return moviesList.Where(m => m.PrimaryTitle.Contains(title)).ToList();
+            return moviesList.Where(m => m.PrimaryTitle.ToLower().Contains(title.ToLower())).ToList();
         }
 
         public static List<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
@@ -96,14 +104,26 @@
         #endregion
 
         #region DELETE Methods
-        public static bool DeleteById(int id)
+        public static bool DeleteMovieById(int id)
         {
-            var movieToRemove = moviesList.Where(m => m.id == id).FirstOrDefault();
-            if (movieToRemove != null) {
-                moviesList.Remove(movieToRemove);
-                return true;
+            DBservices dBservices = new DBservices();
+            if (dBservices.DeleteMovie(id) == 0)
+            {
+                return false;
             }
-            return false;
+            return true;
+        }
+        #endregion
+
+        #region UPDATE Methods
+        public static bool UpdateMovie(int id,Movie movie)
+        {
+            DBservices dBservices = new DBservices();
+            if (dBservices.UpdateMovie(id, movie) == 0)
+            {
+                return false;
+            }
+            return true;
         }
         #endregion
     }
