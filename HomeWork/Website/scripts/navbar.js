@@ -6,7 +6,9 @@
                 <a href="index.html"><span>🏠</span> Home</a>
                 <a href="MyMovies.html" id="myMovies"><span>🎬</span> My Movies</a>
                 <a href="addMovie.html" id="addMovie"><span>➕</span> Add Movies</a>
+                <a href="editMyProfile.html" id="editMyProfile"><span>🔑</span> Edit My Profile</a>
                 <a href="login.html" id="loginLink"><span>🔑</span> Login</a>
+                <a href="adminPage.html" id="adminLink"><span>🔑</span> Admin Controls</a>
                 <button id="logoutBtn"><span>🚪</span> Logout</button>
             </nav>
         </header>

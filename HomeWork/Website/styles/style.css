@@ -487,3 +487,285 @@ body.background-active::after {
             font-size: 1.2rem;
         }
 }
+
+/* Overlay background */
+#rentOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(20, 24, 31, 0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+/* Popup container */
+#rentPopup {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 2.5em 2em 2em 2em;
+    max-width: 370px;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    color: white;
+    animation: popupIn 0.3s cubic-bezier(.4,2,.6,1) both;
+}
+
+@keyframes popupIn {
+    from {
+        transform: translateY(40px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Close button */
+#closeRentPopup {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    #closeRentPopup:hover {
+        color: #e74c3c;
+    }
+
+/* Heading */
+#rentPopup h3 {
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    font-weight: 700;
+    font-size: 1.4em;
+    color: white;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+/* Form styling */
+#rentMovieForm label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+    color: white;
+}
+
+#rentMovieForm input[type="date"] {
+    padding: 0.5em 0.8em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1em;
+    background: #f8fafc;
+    color: #222;
+    margin-left: 0.5em;
+    transition: border 0.2s;
+}
+
+    #rentMovieForm input[type="date"]:focus {
+        border-color: #6c63ff;
+        outline: none;
+    }
+
+/* Total cost */
+#rentMovieForm div[style*="margin:10px 0"] {
+    background: rgba(108, 99, 255, 0.07);
+    border-radius: 6px;
+    padding: 0.5em 0.8em;
+    font-size: 1.08em;
+    color: #444;
+    margin: 1em 0;
+    text-align: center;
+}
+
+/* Confirm button */
+#rentMovieForm .btn {
+    width: 100%;
+    padding: 0.7em 0;
+    background: linear-gradient(90deg, #6c63ff 0%, #48c6ef 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(76, 110, 245, 0.08);
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5em;
+}
+
+    #rentMovieForm .btn:hover {
+        background: linear-gradient(90deg, #48c6ef 0%, #6c63ff 100%);
+        transform: translateY(-2px) scale(1.03);
+    }
+
+
+/* Overlay background */
+#passOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(20, 24, 31, 0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+/* Popup container */
+#passPopup {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 2.5em 2em 2em 2em;
+    max-width: 370px;
+    width: 100%;
+    margin: auto;
+    position: relative;
+    color: white;
+    animation: popupIn 0.3s cubic-bezier(.4,2,.6,1) both;
+}
+
+@keyframes popupIn {
+    from {
+        transform: translateY(40px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Close button */
+#closePassPopup {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 1.5em;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    #closePassPopup:hover {
+        color: #e74c3c;
+    }
+
+/* Heading */
+#passPopup h3 {
+    margin-top: 0;
+    margin-bottom: 1.2em;
+    font-weight: 700;
+    font-size: 1.4em;
+    color: white;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+/* Form styling */
+#passMovieForm label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+    color: white;
+}
+
+#passMovieForm select {
+    padding: 0.5em 0.8em;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1em;
+    background: #f8fafc;
+    color: #222;
+    margin-left: 0.5em;
+    transition: border 0.2s;
+}
+
+    #passMovieForm select:focus {
+        border-color: #6c63ff;
+        outline: none;
+    }
+
+/* Confirm button */
+#passMovieForm .btn {
+    width: 100%;
+    padding: 0.7em 0;
+    background: linear-gradient(90deg, #6c63ff 0%, #48c6ef 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(76, 110, 245, 0.08);
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5em;
+}
+
+    #passMovieForm .btn:hover {
+        background: linear-gradient(90deg, #48c6ef 0%, #6c63ff 100%);
+        transform: translateY(-2px) scale(1.03);
+    }
+
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 30px 0 10px 0;
+    font-size: 1.1em;
+}
+
+.pagination-btn, .page-number-btn {
+    background: linear-gradient(135deg, #6c63ff 0%, #48c6ef 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin: 0 2px;
+}
+
+    .pagination-btn:disabled, .page-number-btn:disabled {
+        background: #ccc;
+        color: #888;
+        cursor: not-allowed;
+    }
+
+    .page-number-btn.active {
+        background: #fff;
+        color: #6c63ff;
+        font-weight: bold;
+        border: 2px solid #6c63ff;
+    }

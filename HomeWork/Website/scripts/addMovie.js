@@ -1,10 +1,15 @@
 ﻿$(document).ready(SetupPage);
-
+let validGenres = []
 function SetupPage() {
     ForceRedirectToHome();
+    validGenres = Array.from(document.getElementById('genres-choices').options).map(opt => opt.value);
     $("#movieForm").submit(submitWithoutReload);
     $("#budget").on("blur", checkBudget);
     $("#budget").on("input", checkBudget);
+    $("#genres").on("blur", checkGenres);
+    $("#genres").on("input", checkGenres);
+    $("#language").on("blur", checkLanguage);
+    $("#language").on("input", checkLanguage);
     $("#averageRating").on("input", validateRating);
 }
 
@@ -126,7 +131,10 @@ function AddMovie() {
         isAdult: $("#isAdult").is(':checked'),
         runtimeMinutes: runtimeMinutes,
         averageRating: averageRating,
-        numVotes: numVotes
+        numVotes: numVotes,
+        deletedAt: null,
+        priceToRent: 0,
+        rentalCount: 0
     }
 
     const user = GetLoggedInUser();
@@ -135,7 +143,7 @@ function AddMovie() {
     }
 
 
-    ajaxCall("POST", urls.movies.addToCart, JSON.stringify(movie), success, error);
+    ajaxCall("POST", urls.movies.addNewMovie, JSON.stringify(movie), success, error);
     return false;
 }
 
@@ -149,13 +157,40 @@ function error(err) {
 }
 
 function submitWithoutReload() {
-    let text = $("#genres").val();
-    let pattern = /^(?!.*,,)(?!^,)(?!.*,$)[a-zA-Z-]+(?:,[a-zA-Z-]+)*$/;
-    let result = pattern.test(text);
-    if (result)
-    {
-        AddMovie()
-    }
+    AddMovie();
     return false;
 }
 
+function checkGenres() {
+    const inputValue = this.value.trim();
+    const pattern = /^(?!.*,,)(?!^,)(?!.*,$)[a-zA-Z-]+(?:,[a-zA-Z-]+)*$/;
+    const isValidFormat = pattern.test(inputValue);
+    let allGenresValid = isValidFormat;
+
+    if (isValidFormat) {
+        const genres = inputValue.split(',').map(g => g.trim());
+        allGenresValid = genres.every(genre => validGenres.includes(genre));
+    }
+
+    if (!allGenresValid) {
+        this.setCustomValidity('Genres must be selected from the provided list and separated by commas.');
+        this.validity.valid = false;
+    } else {
+        this.setCustomValidity('');
+        this.validity.valid = true;
+    }
+    this.reportValidity();
+}
+
+function checkLanguage() {
+    let isValidInput = Array.from(document.getElementById('language-choices').options).map(opt => opt.value).includes(this.value);
+
+    if (!isValidInput) {
+        this.setCustomValidity('The Language must be selected from the provided list');
+        this.validity.valid = false;
+    } else {
+        this.setCustomValidity('');
+        this.validity.valid = true;
+    }
+    this.reportValidity();
+}

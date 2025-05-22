@@ -1,97 +1,132 @@
-﻿$(document).ready(function () {
+﻿let user;
+let currentRentMovie = null;
+$(document).ready(function () {
     initializePage();
 });
 
 function initializePage() {
-    ForceRedirectToHome();
-    retriveFromServer();
-    setupFilterHandlers();
-}
-
-function setupFilterHandlers() {
-    const filterTitleInput = $('#filterTitle');
-    const filterTitleBtn = $('#filterTitleBtn');
-    const startDateInput = $('#startDate');
-    const endDateInput = $('#endDate');
-    const filterDateBtn = $('#filterDateBtn');
-
-    filterTitleBtn.prop('disabled', true);
-    filterDateBtn.prop('disabled', true);
-
-    filterTitleInput.on('input', function () {
-        filterTitleBtn.prop('disabled', $(this).val().trim() === '');
+    user = ForceRedirectToHome();
+    GetRentedMovies();
+    fetchUsers();
+    // Handle form submit
+    $('#passMovieForm').on('submit', function (e) {
+        e.preventDefault();
+        if (!currentPassMovie) return;
+        const newUserId = $('#userSelect').val();
+        if (!newUserId) {
+            showNotification("Please select a user.", "error");
+            return;
+        }
+        passMovie(currentPassMovie.id, newUserId);
+        closePassOverlay();
     });
 
-    startDateInput.add(endDateInput).on('input', function () {
-        filterDateBtn.prop('disabled', startDateInput.val() === '' || endDateInput.val() === '');
-    });
+    // Close popup
+    $('#closePassPopup').on('click', closePassOverlay);
 
-    filterTitleBtn.click(() => { console.log(filterTitleInput.val()); filterMoviesByTitle(filterTitleInput.val()) });
-    filterDateBtn.click(() => filterMoviesByDate(startDateInput.val(), endDateInput.val()));
-    $('#clearFilterBtn').click(clearFilter);
+    $('#passOverlay').on('click', function (e) {
+        if (e.target === this) closePassOverlay();
+    });
 }
 
-function renderMovies(movies) {
+function renderMovies(rentedMovies) {
     const moviesContainer = $('#moviesContainer');
     moviesContainer.empty();
 
-    if (movies.length === 0) {
+    if (!rentedMovies || rentedMovies.length === 0) {
         showNotification('No movies found.', 'info');
         return;
     }
 
-    renderMovieCards('Delete', deleteMovie, moviesContainer, movies);
+    const movies = rentedMovies.map(rm => {
+        if (rm.movie) {
+            rm.movie.rentStart = rm.rentStart;
+            rm.movie.rentEnd = rm.rentEnd;
+            rm.movie.totalPrice = rm.totalPrice;
+        }
+        return rm.movie;
+    }).filter(m => m);
+
+    renderMovieCards('Pass', openPassOverlay, moviesContainer, movies, deleteMovieWithUser);
 }
 
-function setActiveFilter(filterText) {
-    const activeFilter = $('#activeFilter');
-    activeFilter.html(`
-        <span>${filterText}</span>
-        <button id="clearFilterBtn">X</button>
-    `).show();
 
-    $('#clearFilterBtn').click(clearFilter);
+function GetRentedMovies() {
+
+    ajaxCall('GET', urls.movies.getRentedMovies, { userId: user.id }, renderMovies, handleError);
 }
 
-function clearActiveFilter() {
-    const activeFilter = $('#activeFilter');
-    activeFilter.hide().empty();
+function deleteMovieWithUser(movie, user) {
+    if (!user || !movie) return;
+    const data = {
+        userId: user.id,
+        movieId: movie.id,
+        rentEnd: movie.rentEnd
+    };
+    ajaxCall(
+        'DELETE',
+        urls.movies.delete,
+        JSON.stringify(data),
+        function (response) {
+            handleSuccess(
+                response,
+                '🎉 Success! The movie has been deleted from your list.',
+                'ℹ️ No changes were made. The movie might already be deleted.'
+            );
+            GetRentedMovies();
+        },
+        handleError
+    );
 }
 
-function clearFilter() {
-    $('#filterTitle').val('').trigger('input');
-    $('#startDate').val('').trigger('input');
-    $('#endDate').val('').trigger('input');
-    retriveFromServer();
+function passMovie(movieId ,newUserId) {
+    const data = {
+        movieId: movieId,
+        currentUserId: parseInt(user.id),
+        newUserId: parseInt(newUserId)
+
+    };
+
+    ajaxCall('PUT', urls.movies.passMovie, JSON.stringify(data),
+        (response) => {
+            handleSuccess(
+                response,
+                '🎉 Success! The movie has been passed to the new user',
+                'ℹ️ No changes were made.'
+            );
+            GetRentedMovies();
+        }, handleError
+    );
+
+   
 }
 
-function retriveFromServer() {
-    clearActiveFilter();
-    ajaxCall('GET', urls.movies.getCart, "", renderMovies, handleError);
-}
+let users = [];
 
-function deleteMovie(movieId) {
-    ajaxCall('DELETE', `${urls.movies.delete}/${movieId}`, "", (response) => {
-        handleSuccess(
-            response,
-            '🎉 Success! The movie has been deleted from your list.',
-            'ℹ️ No changes were made. The movie might already be deleted.'
-        );
-        retriveFromServer();
+function fetchUsers() {
+    ajaxCall('GET', urls.users.base, null, (response) => {
+        users = response;
     }, handleError);
 }
 
-function filterMoviesByTitle(title) {
-    console.log(title);
-    ajaxCall('GET', `${urls.movies.filterByTitle}?title=${title}`, "", function (movies) {
-        renderMovies(movies);
-        setActiveFilter(`🔍 Filter applied: Movies with the title "${title}"`);
-    }, handleError);
+let currentPassMovie = null;
+
+function openPassOverlay(movie) {
+    currentPassMovie = movie;
+    const userSelect = $('#userSelect');
+    userSelect.empty();
+    users
+        .filter(u => u.id !== user.id)
+        .forEach(u => {
+            userSelect.append($('<option>').val(u.id).text(u.name + " (" + u.email + ")"));
+        });
+    $('#passOverlay').fadeIn(150);
 }
 
-function filterMoviesByDate(startDate, endDate) {
-    ajaxCall('GET', `${urls.movies.filterByDate}?startDate=${startDate}&endDate=${endDate}`, "", function (movies) {
-        renderMovies(movies);
-        setActiveFilter(`📅 Filter applied: Movies released between ${formatDate(startDate)} and ${formatDate(endDate)}`);
-    }, handleError);
+function closePassOverlay() {
+    $('#passOverlay').fadeOut(150);
+    currentPassMovie = null;
 }
+
+
+

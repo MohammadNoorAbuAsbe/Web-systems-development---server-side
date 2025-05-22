@@ -1,15 +1,18 @@
-﻿namespace Movies_System.Models
+﻿
+using Movies_System.Controllers;
+
+namespace Movies_System.Models
 {
     public class User
     {
         #region Fields  
-        static List<User> usersList = new List<User>();
 
         int id;
         string name = string.Empty;
         string email = string.Empty;
         string password = string.Empty;
         bool active = true;
+        DateTime? deletedAt;
         #endregion
 
         #region Constructors  
@@ -33,17 +36,86 @@
         public string Email { get => email; set => email = value; }
         public string Password { get => password; set => password = value; }
         public bool Active { get => active; set => active = value; }
+        public DateTime? DeletedAt { get => deletedAt; set => deletedAt = value; }
         #endregion
 
         #region GET Methods
         public static List<User> Read()
         {
-            return usersList;
+            DBservices dBservices = new DBservices();
+            try
+            {
+                return dBservices.GetUsers();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public static User? GetByEmail(string email)
         {
-            return usersList.FirstOrDefault(u => u.Email == email);
+            DBservices dBservices = new DBservices();
+            try
+            {
+                return dBservices.GetUserByEmail(email);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static User? GetById(int id)
+        {
+            DBservices dBservices = new DBservices();
+            try
+            {
+                return dBservices.GetUserById(id);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static User? GetByName(string name)
+        {
+            DBservices dBservices = new DBservices();
+            try
+            {
+                return dBservices.GetUserByName(name);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static List<User> GetByActive(bool isActive)
+        {
+            DBservices dBservices = new DBservices();
+            try
+            {
+                return dBservices.GetUserByActive(isActive);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public static List<User> GetByDeletedAt(DateTime deletedAt)
+        {
+            DBservices dBservices = new DBservices();
+            try
+            {
+                return dBservices.GetUserByDeletedAt(deletedAt);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         #endregion
 
@@ -52,39 +124,122 @@
         // Without this lock, concurrent access to the usersList could result in concurrency Issue, 
         // such as duplicate registrations or inconsistent state of the list.
         private static readonly object registerLock = new object();
-        public static bool Register(User user)
+       
+        public static RegisterResponse Register(User user)
         {
             lock (registerLock)
             {
-                if (usersList.Any(u => u.Email == user.Email))
+                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
+                DBservices dBservices = new DBservices();
+                try 
                 {
-                    return false;
+                    User? registeredUser = dBservices.RegisterUser(user);
+                    if (registeredUser == null)
+                    {  
+                        return new RegisterResponse
+                        {
+                            Message = "Email already exists",
+                            Success = false
+                        };
+                    }
+                    return new RegisterResponse
+                    {
+                        Message = "User registered successfully",
+                        Success = true,
+                        Id = registeredUser.Id,
+                        Name = registeredUser.Name,
+                        Email = registeredUser.Email
+                    };
+
+                }
+                catch (Exception ex)
+                {
+                    return  new RegisterResponse
+                    {
+                        Message = ex.Message,
+                        Success = false
+                    };
                 }
 
-                user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
-                user.Id = usersList.Count > 0 ? usersList.Max(u => u.Id) + 1 : 1;
-                usersList.Add(user);
-                return true;
             }
         }
 
-        public static object? Login(string email, string password)
+        public static UserResponse? Login(string email, string password)
         {
-            var user = usersList.FirstOrDefault(u => u.Email == email);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            DBservices dBservices = new DBservices();
+            try
+            {
+                User? user = dBservices.LoginUser(email);
+                if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+                {
+                    return null;
+                }
+
+                // Return a response object excluding sensitive information
+                return new UserResponse
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                };
+
+            }
+            catch (Exception ex)
             {
                 return null;
             }
-
-            // Return a response object excluding sensitive information
-            return new
-            {
-                user.Id,
-                user.Name,
-                user.Email,
-                user.Active
-            };
         }
         #endregion
+
+        #region DELETE Methods
+        public static bool DeleteUserById(int id)
+        {
+            DBservices dBservices = new DBservices();
+            if (dBservices.DeleteUser(id) == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
+        #region Update Methods
+        public static UserResponse? UpdateUser(int id, User user)
+        {
+            try
+            {
+                DBservices dBservices = new DBservices();
+                if (user.Password != "")
+                {
+                    user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password, 15);
+                }
+                if (dBservices.UpdateUser(id, user) != null) 
+                {
+                    return new UserResponse
+                    {
+                        Id = user.Id,
+                        Name = user.Name,
+                        Email = user.Email
+                    };
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        #endregion
+
+    }
+
+    public class UserResponse
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
     }
 }

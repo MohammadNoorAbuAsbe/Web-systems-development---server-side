@@ -6,7 +6,6 @@
     <link href="styles/style.css" rel="stylesheet" />
     <link href="styles/notification.css" rel="stylesheet" />
     <link href="styles/navbar.css" rel="stylesheet" />
-    <script src="dataBase/movies-db.js"></script>
 
     <!-- External Libraries -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -28,9 +27,47 @@
 <body>
     <div class="container">
         <div id="notification" class="notification"></div>
-        <button id="loadBtn">Load Movies</button>
+        <div class="filters">
+            <!-- Title Filter -->
+            <label for="filterTitle" class="filter-label">Search by Title</label>
+            <input type="text" id="filterTitle" placeholder="Enter movie title..." />
+            <button id="filterTitleBtn">Filter By Title</button>
+
+            <!-- Date Filters -->
+            <label for="startDate" class="filter-label">From Date</label>
+            <input type="date" id="startDate" />
+            <label for="endDate" class="filter-label">To Date</label>
+            <input type="date" id="endDate" />
+            <button id="filterDateBtn">Filter by Date</button>
+        </div>
+        <div id="activeFilter" class="active-filter"></div>
         <h1 id="title"></h1>
         <div id="moviesContainer"></div>
+        <button id="loadBtn">Load Movies</button>
+        <div id="paginationControls" style="display: none;" class="pagination-controls">
+            <button id="prevBtn" class="pagination-btn">Previous</button>
+            <span id="pageNumbers"></span>
+            <button id="nextBtn" class="pagination-btn">Next</button>
+        </div>
+        <!-- Rent Movie Overlay -->
+        <div id="rentOverlay">
+            <div id="rentPopup">
+                <button id="closeRentPopup">&times;</button>
+                <h3>Rent Movie</h3>
+                <form id="rentMovieForm">
+                    <div>
+                        <label>
+                            Rent until:
+                            <input type="date" id="rentUntilInput" required min="">
+                        </label>
+                    </div>
+                    <div>
+                        Total cost: <span id="rentCost">0</span> $
+                    </div>
+                    <button type="submit" class="btn">Confirm Rent</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Login & Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="styles/editMyProfile.css" rel="stylesheet" />
+    <link href="styles/notification.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/ajaxCalls.js"></script>
+    <script src="scripts/notifications.js"></script>
+    <script src="scripts/editMyProfile.js"></script>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div> <!-- Notification container -->
+
+    <div class="container" id="container">
+        <div id="notification" class="notification"></div>
+
+        <div class="login-container">
+            <form id="editProfileForm">
+                <h2>Update Your Profile</h2>
+                <p class="subtext">Update your name, email, or password</p>
+                <label>
+                    Name:
+                    <input type="text" id="updateName" required pattern="^[A-Za-z]{2,}$" title="Name must be at least 2 letters and contain only letters.">
+                </label>
+                <label>
+                    Email:
+                    <input type="email" id="updateEmail" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Invalid email address">
+                </label>
+                <label>
+                    Password:
+                    <input type="password" id="updatePassword" pattern="^(?=.*[A-Z])(?=.*\d).{8,}$" title="Password must be at least 8 characters long, include at least 1 uppercase letter and 1 number.">
+                    <span class="form-helper">Leave blank to keep your current password</span>
+                </label>
+                <button type="submit" id="submitProfileUpdate">Update Profile</button>
+                <button type="button" id="goBack" class="goBack">Go Back</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

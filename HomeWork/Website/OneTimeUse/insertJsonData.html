@@ -1,0 +1,60 @@
+﻿<!--<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="../dataBase/movies-db.js"></script>
+    <script src="../scripts/ajaxCalls.js"></script>
+    <script>
+        $(document).ready(changeMoviesIDsAndThenSend);
+        //before sending the movies json , change all the ids to 0 for all the movies
+        function changeMoviesIDsAndThenSend() {
+            let changedMovies = [];
+            for (let i = 0; i < movies.length; i++) {
+                let movie = movies[i];
+                const movieToSend = {
+                    id: parseInt(movie.id.slice(2), 10),
+                    url: movie.url,
+                    primaryTitle: movie.primaryTitle,
+                    description: movie.description,
+                    primaryImage: movie.primaryImage,
+                    year: movie.startYear,
+                    releaseDate: movie.releaseDate,
+                    language: movie.language || "N/A",
+                    budget: movie.budget || -1,
+                    grossWorldwide: movie.grossWorldwide || -1,
+                    genres: Array.isArray(movie.genres) ? movie.genres.join(",") : movie.genres,
+                    isAdult: movie.isAdult,
+                    runtimeMinutes: movie.runtimeMinutes,
+                    averageRating: movie.averageRating,
+                    numVotes: movie.numVotes
+                };
+                changedMovies.push(movieToSend);
+            }
+            sendMoviesJsonAsListToServer(changedMovies);
+        }
+
+        function sendMoviesJsonAsListToServer(changedMovies) {
+            if (confirm("Do you want to send the JSON data to the server?")) {
+                ajaxCall(
+                    "POST",
+                    'https://localhost:7246/api/Movies/insertMoviesFromJson',
+                    JSON.stringify(changedMovies),
+                    function (response) {
+                        alert("Data sent successfully: " + response);
+                    },
+                    function (error) {
+                        alert("Error sending data: " + error);
+                    }
+                );
+            }
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>-->

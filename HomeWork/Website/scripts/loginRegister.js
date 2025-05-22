@@ -80,13 +80,7 @@ function setupListeners() {
     function HandleUserAction(data, submitButton, notificationText, apiEndpoint, isRegister = false) {
         ajaxCall("POST", apiEndpoint, JSON.stringify(data), function (res) {
             showNotification(notificationText, "success");
-            if (isRegister) {
-                saveUser(data)
-            }
-            else {
                 saveUser(res);
-            }
-
             setTimeout(() => {
                 window.location.replace("index.html");
             }, 2000);
@@ -95,10 +89,5 @@ function setupListeners() {
             showNotification(errorMessage, "error");
             submitButton.prop("disabled", false);
         });
-    }
-
-    function saveUser(userData) {
-        const user = { name: userData.name, email: userData.email };
-        localStorage.setItem("user", JSON.stringify(user));
     }
 }

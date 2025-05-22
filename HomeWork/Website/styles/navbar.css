@@ -61,11 +61,11 @@ nav:not(.guest) #loginLink {
     display: none;
 }
 
-nav:not(.guest) #logoutBtn {
+nav:not(.guest) #logoutBtn, #editMyProfile {
     display: block;
 }
 
-#logoutBtn {
+#logoutBtn, #editMyProfile {
     order: 1;
     text-align: left;
     justify-content: flex-start;
@@ -77,7 +77,7 @@ nav:not(.guest) #logoutBtn {
         width: 70px;
     }
 
-        header nav a, #logoutBtn {
+        header nav a, #logoutBtn, #editMyProfile {
             margin: 6px 10px;
             padding: 12px;
             justify-content: center;
@@ -87,7 +87,7 @@ nav:not(.guest) #logoutBtn {
                 display: none;
             }
 
-            #logoutBtn::after {
+            #logoutBtn::after, #editMyProfile::after {
                 content: "🚪";
                 display: inline-block;
             }
