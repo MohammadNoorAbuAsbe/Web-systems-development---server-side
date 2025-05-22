@@ -26,22 +26,24 @@
 <body>
     <div class="container">
         <div id="notification" class="notification"></div>
-        <div class="filters">
-            <!-- Title Filter -->
-            <label for="filterTitle" class="filter-label">Search by Title</label>
-            <input type="text" id="filterTitle" placeholder="Enter movie title..." />
-            <button id="filterTitleBtn">Search</button>
-
-            <!-- Date Filters -->
-            <label for="startDate" class="filter-label">From Date</label>
-            <input type="date" id="startDate" />
-            <label for="endDate" class="filter-label">To Date</label>
-            <input type="date" id="endDate" />
-            <button id="filterDateBtn">Filter by Date</button>
-        </div>
-        <div id="activeFilter" class="active-filter"></div>
         <h1 id="title">My Movies</h1>
         <div id="moviesContainer"></div>
+        <!-- Pass Movie Overlay -->
+        <div id="passOverlay">
+            <div id="passPopup">
+                <button id="closePassPopup">&times;</button>
+                <h3>Pass Movie</h3>
+                <form id="passMovieForm">
+                    <div>
+                        <label>
+                            Pass to user:
+                            <select id="userSelect" required></select>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">Confirm Pass</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </html>

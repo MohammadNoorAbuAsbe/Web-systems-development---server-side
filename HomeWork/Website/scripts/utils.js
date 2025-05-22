@@ -46,4 +46,10 @@ function ForceRedirectToHome() {
     if (!user) {
         window.location.href = 'login.html';
     }
+    return user;
+}
+
+function saveUser(userData) {
+    const user = { id: userData.id, name: userData.name, email: userData.email };
+    localStorage.setItem("user", JSON.stringify(user));
 }

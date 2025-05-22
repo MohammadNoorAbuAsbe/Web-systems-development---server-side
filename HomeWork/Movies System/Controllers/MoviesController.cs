@@ -11,10 +11,16 @@ namespace Movies_System.Controllers
     {
         #region GET Methods
         // GET: api/<MoviesController>
-        [HttpGet("cart")]
+        [HttpGet()]
         public IEnumerable<Movie> Get()
         {
             return Movie.Read();
+        }
+
+        [HttpGet("getPaginatedMovies")]
+        public PaginationResponse GetPagination(int currentPage, int pageSize, string? title = null, DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            return Movie.GetPagination(currentPage, pageSize, title, fromDate, toDate);
         }
 
 
@@ -30,26 +36,72 @@ namespace Movies_System.Controllers
         {
             return Movie.GetByReleaseDate(startDate, endDate);
         }
+
+        [HttpGet("GetRentedMovies")]
+        public IEnumerable<RentedMovie> GetRentedMovies(int userId)
+        {
+            return RentedMovie.GetUserRentedMovies(userId);
+        }
         #endregion
 
         #region POST Methods
         // POST api/<MoviesController>
-        [HttpPost("addToCart")]
+        [HttpPost("addNewMovie")]
         public IActionResult Post([FromBody] Movie movie)
         {
-            if (Movie.Insert(movie))
+            try
             {
-                return Ok(new
+                if (Movie.Insert(movie))
                 {
-                    Message = "Movie added successfully",
-                    Success = true
+                    return Ok(new
+                    {
+                        Message = "Movie added successfully",
+                        Success = true
+                    });
+                }
+                return BadRequest(new
+                {
+                    Message = "Movie already exists",
+                    Success = false
                 });
             }
-            return BadRequest(new
+            catch (Exception ex)
             {
-                Message = "Movie already exists",
-                Success = false
-            });
+                return BadRequest(new
+                {
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
+        }
+
+        [HttpPost("rentMovie")]
+        public IActionResult RentMovie([FromBody] RentRequest rentRequest)
+        {
+            try
+            {
+                if (Movie.Rent(rentRequest.UserId, rentRequest.MovieId, rentRequest.RentEnd))
+                {
+                    return Ok(new
+                    {
+                        Message = "Movie rented successfully",
+                        Success = true
+                    });
+                }
+                return BadRequest(new
+                {
+                    Message = "Movie already exists",
+                    Success = false
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    Message = ex.Message,
+                    Success = false
+                });
+            }
         }
         #endregion
 
@@ -58,8 +110,60 @@ namespace Movies_System.Controllers
         [HttpDelete("{id}")]
         public bool Delete(int id)
         {
-            return Movie.RemoveFromList(id);
+            return Models.Movie.DeleteMovieById(id);
+        }
+
+        [HttpDelete("deleteRented")]
+        public bool DeleteRented([FromBody] DeleteRequest req)
+        {
+            return Models.Movie.DeleteRentedMovie(req.UserId, req.MovieId, req.RentEnd);
         }
         #endregion
+
+        #region PUT Methods
+        // UPDATE api/<MoviesController>/5
+        [HttpPut("Update/{id}")]
+        public bool Put(int id, Movie movie)
+        {
+            return Models.Movie.UpdateMovie(id, movie);
+        }
+
+
+        [HttpPut("passMovie")]
+        public bool PassMovie([FromBody] PassMovieRequest req)
+        {
+            return Models.RentedMovie.PassMovie(req.movieId, req.currentUserId, req.newUserId);
+        }
+        #endregion
+
+        #region One Time Use (Unneeded now)
+        //[HttpPost("insertMoviesFromJson")]
+        //public int InsertJsonToDataBase([FromBody] List<Movie> movies)
+        //{
+        //    DBservices dBservices = new DBservices();
+        //    return dBservices.InsertBatch(movies);
+        //}
+        #endregion
+
+        public class RentRequest
+        {
+            public int UserId { get; set; }
+            public int MovieId { get; set; }
+            public DateTime RentEnd { get; set; }
+        }
+
+        public class PassMovieRequest
+        {
+            public int movieId { get; set; }
+            public int currentUserId { get; set; }
+            public int newUserId { get; set; }
+        }
+
+        public class DeleteRequest
+        {
+            public int UserId { get; set; }
+            public int MovieId { get; set; }
+            public DateTime RentEnd { get; set; }
+        }
     }
 }

@@ -401,3 +401,10 @@ FodyWeavers.xsd
 # Ignore AssemblyInfo.cs and AssemblyInfoInputs.cache files globally
 **/AssemblyInfo.cs
 **/AssemblyInfoInputs.cache
+
+
+# App configuration files
+**/appsettings.json
+**/appsettings.*.json
+appsettings.json
+appsettings.*.json

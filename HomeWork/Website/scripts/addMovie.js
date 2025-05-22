@@ -131,7 +131,10 @@ function AddMovie() {
         isAdult: $("#isAdult").is(':checked'),
         runtimeMinutes: runtimeMinutes,
         averageRating: averageRating,
-        numVotes: numVotes
+        numVotes: numVotes,
+        deletedAt: null,
+        priceToRent: 0,
+        rentalCount: 0
     }
 
     const user = GetLoggedInUser();
@@ -140,7 +143,7 @@ function AddMovie() {
     }
 
 
-    ajaxCall("POST", urls.movies.addToCart, JSON.stringify(movie), success, error);
+    ajaxCall("POST", urls.movies.addNewMovie, JSON.stringify(movie), success, error);
     return false;
 }
 

@@ -1,4 +1,6 @@
-﻿namespace Movies_System.Models
+﻿using System;
+
+namespace Movies_System.Models
 {
     public class Movie
     {
@@ -12,19 +14,22 @@
         string primaryImage = string.Empty;
         int year;
         DateTime releaseDate;
-        string language = string.Empty;
-        double budget;
-        double grossWorldwide;
+        string language = string.Empty;          // Value N/A indicates not provided
+        double budget;                           // Value -1 indicates not provided
+        double grossWorldwide;                   // Value -1 indicates not provided
         string genres = string.Empty;
         bool isAdult;
         int runtimeMinutes;
         float averageRating;
         int numVotes;
+        int priceToRent;
+        int rentalCount;
+        DateTime? deletedAt;
 
         #endregion
 
         #region Constructors
-        public Movie(int id, string url, string primaryTitle, string description, string primaryImage, int year, DateTime releaseDate, string language, double budget, double grossWorldwide, string genres, bool isAdult, int runtimeMinutes, float averageRating, int numVotes)
+        public Movie(int id, string url, string primaryTitle, string description, string primaryImage, int year, DateTime releaseDate, string language, double budget, double grossWorldwide, string genres, bool isAdult, int runtimeMinutes, float averageRating, int numVotes, int priceToRent, int rentalCount)
         {
             Id = id;
             Url = url;
@@ -41,6 +46,8 @@
             RuntimeMinutes = runtimeMinutes;
             AverageRating = averageRating;
             NumVotes = numVotes;
+            PriceToRent = priceToRent;
+            RentalCount = rentalCount;
         }
         public Movie()
         {
@@ -63,51 +70,107 @@
         public int RuntimeMinutes { get => runtimeMinutes; set => runtimeMinutes = value; }
         public float AverageRating { get => averageRating; set => averageRating = value; }
         public int NumVotes { get => numVotes; set => numVotes = value; }
+        public DateTime? DeletedAt { get => deletedAt; set => deletedAt = value; }
+        public int PriceToRent { get => priceToRent; set => priceToRent = value; }
+        public int RentalCount { get => rentalCount; set => rentalCount = value; }
         #endregion
 
         #region POST Methods
         public static bool Insert(Movie movie)
         {
-            bool result = false;
-            if (!moviesList.Any(m => m.PrimaryTitle == movie.PrimaryTitle))
+            try
             {
-                movie.Id = moviesList.Count > 0 ? moviesList.Max(m => m.Id) + 1 : 1;
-                moviesList.Add(movie);
-                result = true;
+                DBservices dBservices = new DBservices();
+                if (dBservices.AddMovie(movie) == 0)
+                {
+                    return false;
+                }
+                return true;
             }
-            return result;
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public static bool Rent(int userId, int movieId, DateTime rentEnd) 
+        {
+            DBservices dBservices = new DBservices();
+            if (dBservices.RentMovie(userId, movieId, rentEnd) == 0)
+            {
+                return false;
+            }
+            return true;
         }
         #endregion
 
         #region GET Methods 
         public static List<Movie> Read()
         {
-            return moviesList;
+            DBservices db = new DBservices();
+            return db.GetAllMovies();
         }
 
-        public static List<Movie> GetByTitle(string title) 
+        public static PaginationResponse GetPagination(int currentPage, int pageSize, string? title = null, DateTime? fromDate = null, DateTime? toDate = null)
         {
-            return moviesList.Where(m => m.PrimaryTitle.ToLower().Contains(title.ToLower())).ToList();
+            DBservices db = new DBservices();
+            return db.GetLimitedMovies(currentPage, pageSize, title, fromDate, toDate);
+        }
+
+        public static List<Movie> GetByTitle(string title)
+        {
+            DBservices db = new DBservices();
+            return db.GetMoviesByTitle(title);
         }
 
         public static List<Movie> GetByReleaseDate(DateTime startDate, DateTime endDate)
         {
-            return moviesList.Where(m => m.ReleaseDate >= startDate && m.ReleaseDate <= endDate).ToList();
+            DBservices db = new DBservices();
+            return db.GetMoviesByDate(startDate, endDate);
         }
+
         #endregion
 
         #region DELETE Methods
-        public static bool RemoveFromList(int id)
+        public static bool DeleteMovieById(int id)
         {
-            bool result = false;
-            Movie? movieToRemove = moviesList.FirstOrDefault(m => m.Id == id);
-            if (movieToRemove != null)
+            DBservices dBservices = new DBservices();
+            if (dBservices.DeleteMovie(id) == 0)
             {
-                moviesList.Remove(movieToRemove);
-                result = true;
+                return false;
             }
-            return result;
+            return true;
+        }
+
+        public static bool DeleteRentedMovie(int userId, int movieId, DateTime rentEnd)
+        {
+            DBservices dBservices = new DBservices();
+            if (dBservices.DeleteRentedMovie(userId, movieId, rentEnd) == 0)
+            {
+                return false;
+            }
+            return true;
         }
         #endregion
+
+        #region UPDATE Methods
+        public static bool UpdateMovie(int id,Movie movie)
+        {
+            DBservices dBservices = new DBservices();
+            if (dBservices.UpdateMovie(id, movie) == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        #endregion
+    }
+
+    public class PaginationResponse
+    {
+        public List<Movie> Movies { get; set; }
+        public int TotalPages { get; set; }
     }
 }

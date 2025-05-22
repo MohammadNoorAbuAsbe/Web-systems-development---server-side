@@ -42,7 +42,8 @@ function renderMovieCards(
     buttonText,
     onButtonClick,
     container,
-    movies
+    movies,
+    deleteHandler
 ) {
     const user = GetLoggedInUser();
     // Use a document fragment to improve performance by minimizing DOM reflows
@@ -79,8 +80,20 @@ function renderMovieCards(
             createDetailElement('For Adults?', movie.isAdult ? 'Yes' : 'No'),
             createDetailElement('Release Date', movie.releaseDate ? formatDate(movie.releaseDate) : 'N/A'),
             createDetailElement('Budget', movie.budget && movie.budget !== -1 ? numberWithCommas(parseInt(movie.budget)) : 'N/A'),
-            createDetailElement('Gross', movie.grossWorldwide && movie.grossWorldwide !== -1 ? numberWithCommas(parseInt(movie.grossWorldwide)) : 'N/A')
+            createDetailElement('Gross', movie.grossWorldwide && movie.grossWorldwide !== -1 ? numberWithCommas(parseInt(movie.grossWorldwide)) : 'N/A'),
+            createDetailElement('Price to Rent', movie.priceToRent && movie.priceToRent !== -1 ? numberWithCommas(parseInt(movie.priceToRent)) : 'N/A'),
         );
+
+        if (movie.totalPrice !== undefined) {
+            secondaryContent.append(createDetailElement('Total Rent Price', `$${movie.totalPrice}`));
+        }
+        if (movie.rentStart) {
+            secondaryContent.append(createDetailElement('Rented From', formatDate(movie.rentStart)));
+        }
+        if (movie.rentEnd) {
+            secondaryContent.append(createDetailElement('Rented To', formatDate(movie.rentEnd)));
+        }
+        
 
         const actionButton = $('<button>').addClass('btn')
             .text(buttonText)
@@ -88,11 +101,23 @@ function renderMovieCards(
                 if (!user) {
                     window.location.href = 'login.html';
                 } else {
-                    onButtonClick(movie.id);
+                    onButtonClick(movie);
                 }
             });
+
+        
     
         movieCard.append(primaryContent, secondaryContent, actionButton);
+        if (typeof deleteHandler === 'function') {
+            const deleteButton = $('<button>')
+                .addClass('btn')
+                .text('Delete')
+                .on('click', (e) => {
+                    e.stopPropagation();
+                    deleteHandler(movie, user);
+                });
+            movieCard.append(deleteButton);
+        }
         fragment.appendChild(movieCard[0]);
     });
 
